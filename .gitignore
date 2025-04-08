@@ -1,0 +1,8 @@
+apks/
+.DS_Store
+cyberpower IP.txt
+.env
+credentials.json
+data/
+logs/
+~$*

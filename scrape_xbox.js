@@ -7,7 +7,6 @@ if (!globalThis.processedPresenceCache) {
     globalThis.processedPresenceCache = {};
 }
 
-
 // Convert a JSON string into CSV using only the relevant telemetry columns.
 function jsonToCSV(jsonStr) {
     let data;
@@ -49,7 +48,7 @@ function jsonToCSV(jsonStr) {
         const multiplayerSummary = JSON.stringify(person.multiplayerSummary) || "";
         const lastSeen = person.lastSeenDateTimeUtc || "";
         
-        let row = [platform, userName, accountID, presenceState, presenceText, presenceState, presencePlatform, titleId, gamerScore, multiplayerSummary, lastSeen];
+        let row = [platform, userName, accountID, presenceState, presenceText, presencePlatform, titleId, gamerScore, multiplayerSummary, lastSeen];
         row = row.map(field => `"${String(field).replace(/"/g, '""')}"`);
         csv += row.join(",") + "\n";
     });
@@ -108,14 +107,17 @@ function processData(sslKey, data) {
     var body = combined.slice(bodyOffset);
     
     function processBody(result) {
+        // Check against duplicate JSON for this cycle.
+        if (globalThis.processedPresenceCache[result]) {
+            return;
+        }
+        globalThis.processedPresenceCache[result] = true;
+        
         var csvStr = jsonToCSV(result);
         if (csvStr) {
-            // console.log("Decoded HTTP body:\n" + result + "\n------------------------------------");
             console.log("[*] Extracted JSON data and converted to CSV:");
             console.log(csvStr);
             send({type: "csv-data", csv: csvStr, platform: "Xbox"});
-        } else {
-            // console.log("[DEBUG] Intercepted HTTP response on SSL " + sslKey + " did not contain valid telemetry data.");
         }
     }
     
