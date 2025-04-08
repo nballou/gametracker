@@ -1,0 +1,1333 @@
+2025-04-08 12:40:45,181 [INFO] [HOST] Loaded previous status data from data/telemetry_2025-04-08.csv
+2025-04-08 12:40:45,181 [INFO] [HOST] Killing any running frida-server instance...
+2025-04-08 12:40:46,339 [INFO] [HOST] Device is already in root mode. Proceeding...
+2025-04-08 12:40:46,340 [INFO] [HOST] Starting frida-server on device...
+2025-04-08 12:40:48,362 [INFO] [HOST] frida-server should now be running.
+2025-04-08 12:40:48,364 [INFO] [HOST] Starting telemetry collection workflow...
+2025-04-08 12:40:48,482 [INFO] [FRIDA] PS App already running with pid 8205. Switching to foreground...
+2025-04-08 12:40:48,482 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 12:40:50,547 [INFO] [ADB] Swiping from (660, 801) to (660, 1996)
+2025-04-08 12:40:51,200 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 12:40:51,201 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 12:40:52,067 [DEBUG] [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 12:40:52,067 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 12:49:38,767 [INFO] [HOST] Loaded previous status data from data/telemetry_2025-04-08.csv
+2025-04-08 12:49:38,768 [INFO] [HOST] Killing any running frida-server instance...
+2025-04-08 12:49:39,927 [INFO] [HOST] Device is already in root mode. Proceeding...
+2025-04-08 12:49:39,927 [INFO] [HOST] Starting frida-server on device...
+2025-04-08 12:49:41,952 [INFO] [HOST] frida-server should now be running.
+2025-04-08 12:49:41,953 [INFO] [HOST] Starting telemetry collection workflow...
+2025-04-08 12:49:42,079 [INFO] [FRIDA] PS App already running with pid 8205. Switching to foreground...
+2025-04-08 12:49:42,079 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 12:49:44,135 [INFO] [ADB] Swiping from (694, 917) to (694, 1810)
+2025-04-08 12:49:44,849 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 12:49:44,850 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 12:50:15,858 [INFO] [HOST] Loaded previous status data from data/telemetry_2025-04-08.csv
+2025-04-08 12:50:15,859 [INFO] [HOST] Killing any running frida-server instance...
+2025-04-08 12:50:16,980 [INFO] [HOST] Device is already in root mode. Proceeding...
+2025-04-08 12:50:16,980 [INFO] [HOST] Starting frida-server on device...
+2025-04-08 12:50:18,997 [INFO] [HOST] frida-server should now be running.
+2025-04-08 12:50:18,999 [INFO] [HOST] Starting telemetry collection workflow...
+2025-04-08 12:50:19,097 [INFO] [FRIDA] com.scee.psxandroid not running. Spawning...
+2025-04-08 12:50:19,167 [INFO] [FRIDA] Spawned com.scee.psxandroid with pid 9146.
+2025-04-08 12:50:19,384 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 12:50:19,384 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 12:50:23,572 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 12:50:23,572 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 12:50:23,572 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 12:50:46,455 [INFO] [FRIDA] Xbox already running with pid 8017. Switching to foreground...
+2025-04-08 12:50:46,456 [INFO] [ADB] Bringing com.microsoft.xboxone.smartglass/com.microsoft.xbox.MainActivity to foreground
+2025-04-08 12:50:48,539 [INFO] [ADB] Swiping from (761, 922) to (761, 1918)
+2025-04-08 12:50:49,149 [INFO] [FRIDA] Script loaded for com.microsoft.xboxone.smartglass from scrape_xbox.js.
+2025-04-08 12:50:49,149 [INFO] [HOST] Waiting for Xbox telemetry...
+2025-04-08 12:51:16,152 [INFO] [HOST] Cycle complete. Waiting 73.85 seconds until next cycle...
+2025-04-08 12:52:30,051 [INFO] [FRIDA] PS App already running with pid 9146. Switching to foreground...
+2025-04-08 12:52:30,051 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 12:52:31,036 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 12:52:31,037 [DEBUG] Change detected for key ('PlayStation', '461699146552757965'): old_status='offline', new_status='online'
+2025-04-08 12:52:31,037 [DEBUG] process_csv_data: 1 new row(s) detected from platform PlayStation.
+2025-04-08 12:52:31,037 [INFO] update_daily_csv: Appended 1 row(s) to data/telemetry_2025-04-08.csv.
+2025-04-08 12:52:32,139 [INFO] [ADB] Swiping from (629, 729) to (629, 1837)
+2025-04-08 12:52:32,530 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 12:52:32,531 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 12:52:33,499 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 12:52:33,499 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 12:52:33,500 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 12:52:33,508 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 12:52:33,511 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 12:52:33,517 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 12:52:59,562 [INFO] [FRIDA] Xbox already running with pid 8017. Switching to foreground...
+2025-04-08 12:52:59,563 [INFO] [ADB] Bringing com.microsoft.xboxone.smartglass/com.microsoft.xbox.MainActivity to foreground
+2025-04-08 12:53:01,627 [INFO] [ADB] Swiping from (892, 830) to (892, 1816)
+2025-04-08 12:53:02,012 [INFO] [FRIDA] Script loaded for com.microsoft.xboxone.smartglass from scrape_xbox.js.
+2025-04-08 12:53:02,012 [INFO] [HOST] Waiting for Xbox telemetry...
+2025-04-08 12:53:29,015 [INFO] [HOST] Cycle complete. Waiting 30.98 seconds until next cycle...
+2025-04-08 12:54:00,050 [INFO] [FRIDA] PS App already running with pid 9146. Switching to foreground...
+2025-04-08 12:54:00,050 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 12:54:00,970 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 12:54:00,970 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 12:54:00,971 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 12:54:00,973 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 12:54:00,974 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 12:54:00,974 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 12:54:02,109 [INFO] [ADB] Swiping from (360, 607) to (360, 1925)
+2025-04-08 12:54:02,543 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 12:54:02,543 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 12:54:03,461 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 12:54:03,461 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 12:54:03,461 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 12:54:03,466 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 12:54:03,466 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 12:54:03,467 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 12:54:03,473 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 12:54:03,473 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 12:54:03,473 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 12:54:29,606 [INFO] [FRIDA] Xbox already running with pid 8017. Switching to foreground...
+2025-04-08 12:54:29,607 [INFO] [ADB] Bringing com.microsoft.xboxone.smartglass/com.microsoft.xbox.MainActivity to foreground
+2025-04-08 12:54:31,702 [INFO] [ADB] Swiping from (210, 824) to (210, 1829)
+2025-04-08 12:54:32,090 [INFO] [FRIDA] Script loaded for com.microsoft.xboxone.smartglass from scrape_xbox.js.
+2025-04-08 12:54:32,091 [INFO] [HOST] Waiting for Xbox telemetry...
+2025-04-08 12:54:59,093 [INFO] [HOST] Cycle complete. Waiting 30.91 seconds until next cycle...
+2025-04-08 12:55:30,070 [INFO] [FRIDA] PS App already running with pid 9146. Switching to foreground...
+2025-04-08 12:55:30,071 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 12:55:31,102 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 12:55:31,102 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 12:55:31,103 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 12:55:31,105 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 12:55:31,105 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 12:55:31,106 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 12:55:31,109 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 12:55:31,109 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 12:55:31,109 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 12:55:32,168 [INFO] [ADB] Swiping from (693, 724) to (693, 1850)
+2025-04-08 12:55:32,606 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 12:55:32,606 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 12:55:33,594 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 12:55:33,594 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 12:55:33,594 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 12:55:33,600 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 12:55:33,600 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 12:55:33,601 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 12:55:33,605 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 12:55:33,606 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 12:55:33,606 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 12:55:59,668 [INFO] [FRIDA] Xbox already running with pid 8017. Switching to foreground...
+2025-04-08 12:55:59,669 [INFO] [ADB] Bringing com.microsoft.xboxone.smartglass/com.microsoft.xbox.MainActivity to foreground
+2025-04-08 12:56:01,725 [INFO] [ADB] Swiping from (687, 670) to (687, 1841)
+2025-04-08 12:56:02,105 [INFO] [FRIDA] Script loaded for com.microsoft.xboxone.smartglass from scrape_xbox.js.
+2025-04-08 12:56:02,106 [INFO] [HOST] Waiting for Xbox telemetry...
+2025-04-08 12:56:29,111 [INFO] [HOST] Cycle complete. Waiting 30.89 seconds until next cycle...
+2025-04-08 12:57:00,027 [INFO] [FRIDA] PS App already running with pid 9146. Switching to foreground...
+2025-04-08 12:57:00,028 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 12:57:00,913 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 12:57:00,914 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 12:57:00,914 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 12:57:00,917 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 12:57:00,917 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 12:57:00,917 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 12:57:00,920 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 12:57:00,920 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 12:57:00,921 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 12:57:02,079 [INFO] [ADB] Swiping from (783, 690) to (783, 1881)
+2025-04-08 12:57:02,455 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 12:57:02,456 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 12:57:03,463 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 12:57:03,464 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 12:57:03,464 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 12:57:03,469 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 12:57:03,469 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 12:57:03,470 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 12:57:03,474 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 12:57:03,475 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 12:57:03,475 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 12:57:29,480 [INFO] [FRIDA] Xbox already running with pid 8017. Switching to foreground...
+2025-04-08 12:57:29,481 [INFO] [ADB] Bringing com.microsoft.xboxone.smartglass/com.microsoft.xbox.MainActivity to foreground
+2025-04-08 12:57:31,538 [INFO] [ADB] Swiping from (569, 863) to (569, 1857)
+2025-04-08 12:57:56,910 [INFO] [HOST] Cycle complete. Waiting 33.09 seconds until next cycle...
+2025-04-08 12:58:14,400 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 12:58:14,400 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 12:58:14,400 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 12:58:14,403 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 12:58:14,403 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 12:58:14,403 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 12:58:14,409 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 12:58:14,409 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 12:58:14,409 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 12:58:30,149 [INFO] [FRIDA] PS App already running with pid 9146. Switching to foreground...
+2025-04-08 12:58:30,149 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 12:58:32,245 [INFO] [ADB] Swiping from (491, 752) to (491, 1910)
+2025-04-08 12:58:32,665 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 12:58:32,666 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 12:58:59,681 [INFO] [FRIDA] com.microsoft.xboxone.smartglass not running. Spawning...
+2025-04-08 12:58:59,736 [INFO] [FRIDA] Spawned com.microsoft.xboxone.smartglass with pid 10122.
+2025-04-08 12:58:59,872 [INFO] [FRIDA] Script loaded for com.microsoft.xboxone.smartglass from scrape_xbox.js.
+2025-04-08 12:58:59,872 [INFO] [HOST] Waiting for Xbox telemetry...
+2025-04-08 12:59:02,204 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 12:59:02,204 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 12:59:02,204 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 12:59:02,216 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 12:59:02,217 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 12:59:02,217 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 12:59:02,353 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 12:59:02,354 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 12:59:02,354 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 12:59:26,876 [INFO] [HOST] Cycle complete. Waiting 33.12 seconds until next cycle...
+2025-04-08 13:00:00,046 [INFO] [FRIDA] PS App already running with pid 9146. Switching to foreground...
+2025-04-08 13:00:00,047 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 13:00:02,110 [INFO] [ADB] Swiping from (643, 868) to (643, 1898)
+2025-04-08 13:00:02,501 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 13:00:02,502 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 13:00:29,537 [INFO] [FRIDA] Xbox already running with pid 10122. Switching to foreground...
+2025-04-08 13:00:29,537 [INFO] [ADB] Bringing com.microsoft.xboxone.smartglass/com.microsoft.xbox.MainActivity to foreground
+2025-04-08 13:00:31,596 [INFO] [ADB] Swiping from (678, 926) to (678, 1932)
+2025-04-08 13:00:32,227 [INFO] [FRIDA] Script loaded for com.microsoft.xboxone.smartglass from scrape_xbox.js.
+2025-04-08 13:00:32,228 [INFO] [HOST] Waiting for Xbox telemetry...
+2025-04-08 13:00:59,232 [INFO] [HOST] Cycle complete. Waiting 30.77 seconds until next cycle...
+2025-04-08 13:01:30,066 [INFO] [FRIDA] PS App already running with pid 9146. Switching to foreground...
+2025-04-08 13:01:30,067 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 13:01:32,140 [INFO] [ADB] Swiping from (869, 650) to (869, 1835)
+2025-04-08 13:01:32,534 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 13:01:32,535 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 13:01:59,564 [INFO] [FRIDA] Xbox already running with pid 10122. Switching to foreground...
+2025-04-08 13:01:59,564 [INFO] [ADB] Bringing com.microsoft.xboxone.smartglass/com.microsoft.xbox.MainActivity to foreground
+2025-04-08 13:02:01,605 [INFO] [ADB] Swiping from (814, 927) to (814, 1951)
+2025-04-08 13:02:02,050 [INFO] [FRIDA] Script loaded for com.microsoft.xboxone.smartglass from scrape_xbox.js.
+2025-04-08 13:02:02,051 [INFO] [HOST] Waiting for Xbox telemetry...
+2025-04-08 13:02:29,057 [INFO] [HOST] Cycle complete. Waiting 30.94 seconds until next cycle...
+2025-04-08 13:03:00,045 [INFO] [FRIDA] PS App already running with pid 9146. Switching to foreground...
+2025-04-08 13:03:00,045 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 13:03:02,116 [INFO] [ADB] Swiping from (892, 669) to (892, 1894)
+2025-04-08 13:03:02,499 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 13:03:02,499 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 13:03:20,509 [INFO] [HOST] Loaded previous status data from data/telemetry_2025-04-08.csv
+2025-04-08 13:03:20,509 [INFO] [HOST] Killing any running frida-server instance...
+2025-04-08 13:03:21,602 [INFO] [HOST] Device is already in root mode. Proceeding...
+2025-04-08 13:03:21,602 [INFO] [HOST] Starting frida-server on device...
+2025-04-08 13:03:23,617 [INFO] [HOST] frida-server should now be running.
+2025-04-08 13:03:23,619 [INFO] [HOST] Starting telemetry collection workflow...
+2025-04-08 13:03:23,696 [INFO] [FRIDA] PS App already running with pid 9146. Switching to foreground...
+2025-04-08 13:03:23,696 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 13:03:25,738 [INFO] [ADB] Swiping from (212, 736) to (212, 1916)
+2025-04-08 13:03:26,291 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 13:03:26,291 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 13:03:53,322 [INFO] [FRIDA] Xbox already running with pid 10122. Switching to foreground...
+2025-04-08 13:03:53,323 [INFO] [ADB] Bringing com.microsoft.xboxone.smartglass/com.microsoft.xbox.MainActivity to foreground
+2025-04-08 13:03:55,382 [INFO] [ADB] Swiping from (669, 663) to (669, 1963)
+2025-04-08 13:03:55,954 [INFO] [FRIDA] Script loaded for com.microsoft.xboxone.smartglass from scrape_xbox.js.
+2025-04-08 13:03:55,954 [INFO] [HOST] Waiting for Xbox telemetry...
+2025-04-08 13:04:08,568 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 13:04:08,569 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 13:04:08,569 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 13:04:10,429 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 13:04:10,429 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 13:04:10,429 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 13:04:10,671 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 13:04:10,672 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 13:04:10,672 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 13:04:22,957 [INFO] [HOST] Cycle complete. Waiting 7.04 seconds until next cycle...
+2025-04-08 13:04:30,050 [INFO] [FRIDA] PS App already running with pid 9146. Switching to foreground...
+2025-04-08 13:04:30,052 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 13:04:32,110 [INFO] [ADB] Swiping from (596, 805) to (596, 1866)
+2025-04-08 13:04:32,496 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 13:04:32,497 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 13:04:59,529 [INFO] [FRIDA] Xbox already running with pid 10122. Switching to foreground...
+2025-04-08 13:04:59,530 [INFO] [ADB] Bringing com.microsoft.xboxone.smartglass/com.microsoft.xbox.MainActivity to foreground
+2025-04-08 13:05:01,587 [INFO] [ADB] Swiping from (724, 661) to (724, 1928)
+2025-04-08 13:05:01,997 [INFO] [FRIDA] Script loaded for com.microsoft.xboxone.smartglass from scrape_xbox.js.
+2025-04-08 13:05:01,998 [INFO] [HOST] Waiting for Xbox telemetry...
+2025-04-08 13:05:02,509 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 13:05:02,510 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 13:05:02,511 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 13:05:02,599 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 13:05:02,599 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 13:05:02,600 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 13:05:02,667 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 13:05:02,668 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 13:05:02,668 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 13:05:02,679 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 13:05:02,679 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 13:05:02,679 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 13:05:29,001 [INFO] [HOST] Cycle complete. Waiting 31.00 seconds until next cycle...
+2025-04-08 13:06:08,144 [INFO] [HOST] Loaded previous status data from data/telemetry_2025-04-08.csv
+2025-04-08 13:06:08,144 [INFO] [HOST] Killing any running frida-server instance...
+2025-04-08 13:06:09,280 [INFO] [HOST] Device is already in root mode. Proceeding...
+2025-04-08 13:06:09,281 [INFO] [HOST] Starting frida-server on device...
+2025-04-08 13:06:11,306 [INFO] [HOST] frida-server should now be running.
+2025-04-08 13:06:11,308 [INFO] [HOST] Starting telemetry collection workflow...
+2025-04-08 13:06:11,427 [INFO] [FRIDA] com.scee.psxandroid not running. Spawning...
+2025-04-08 13:06:11,501 [INFO] [FRIDA] Spawned com.scee.psxandroid with pid 11007.
+2025-04-08 13:06:11,642 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 13:06:11,642 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 13:06:38,667 [INFO] [FRIDA] com.microsoft.xboxone.smartglass not running. Spawning...
+2025-04-08 13:06:38,725 [INFO] [FRIDA] Spawned com.microsoft.xboxone.smartglass with pid 11295.
+2025-04-08 13:06:38,867 [INFO] [FRIDA] Script loaded for com.microsoft.xboxone.smartglass from scrape_xbox.js.
+2025-04-08 13:06:38,867 [INFO] [HOST] Waiting for Xbox telemetry...
+2025-04-08 13:06:41,641 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 13:06:41,642 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 13:06:41,642 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 13:06:41,642 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 13:06:41,643 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 13:06:41,643 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 13:06:41,978 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 13:06:41,978 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 13:06:41,978 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 13:06:56,582 [INFO] [HOST] Loaded previous status data from data/telemetry_2025-04-08.csv
+2025-04-08 13:06:56,582 [INFO] [HOST] Killing any running frida-server instance...
+2025-04-08 13:06:57,740 [INFO] [HOST] Device is already in root mode. Proceeding...
+2025-04-08 13:06:57,741 [INFO] [HOST] Starting frida-server on device...
+2025-04-08 13:06:59,762 [INFO] [HOST] frida-server should now be running.
+2025-04-08 13:06:59,763 [INFO] [HOST] Starting telemetry collection workflow...
+2025-04-08 13:06:59,864 [INFO] [FRIDA] PS App already running with pid 11007. Switching to foreground...
+2025-04-08 13:06:59,864 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 13:07:01,923 [INFO] [ADB] Swiping from (408, 735) to (408, 1892)
+2025-04-08 13:07:02,545 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 13:07:02,546 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 13:07:29,615 [INFO] [FRIDA] Xbox already running with pid 11295. Switching to foreground...
+2025-04-08 13:07:29,617 [INFO] [ADB] Bringing com.microsoft.xboxone.smartglass/com.microsoft.xbox.MainActivity to foreground
+2025-04-08 13:07:31,686 [INFO] [ADB] Swiping from (627, 818) to (627, 1854)
+2025-04-08 13:07:32,313 [INFO] [FRIDA] Script loaded for com.microsoft.xboxone.smartglass from scrape_xbox.js.
+2025-04-08 13:07:32,314 [INFO] [HOST] Waiting for Xbox telemetry...
+2025-04-08 13:07:58,067 [INFO] [HOST] Loaded previous status data from data/telemetry_2025-04-08.csv
+2025-04-08 13:07:58,067 [INFO] [HOST] Killing any running frida-server instance...
+2025-04-08 13:07:59,212 [INFO] [HOST] Device is already in root mode. Proceeding...
+2025-04-08 13:07:59,212 [INFO] [HOST] Starting frida-server on device...
+2025-04-08 13:08:01,231 [INFO] [HOST] frida-server should now be running.
+2025-04-08 13:08:01,233 [INFO] [HOST] Starting telemetry collection workflow...
+2025-04-08 13:08:01,352 [INFO] [FRIDA] PS App already running with pid 11007. Switching to foreground...
+2025-04-08 13:08:01,353 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 13:08:03,401 [INFO] [ADB] Swiping from (288, 924) to (288, 1861)
+2025-04-08 13:08:03,978 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 13:08:03,979 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 13:08:24,950 [INFO] [HOST] Loaded previous status data from data/telemetry_2025-04-08.csv
+2025-04-08 13:08:24,950 [INFO] [HOST] Killing any running frida-server instance...
+2025-04-08 13:08:26,099 [INFO] [HOST] Device is already in root mode. Proceeding...
+2025-04-08 13:08:26,100 [INFO] [HOST] Starting frida-server on device...
+2025-04-08 13:08:28,124 [INFO] [HOST] frida-server should now be running.
+2025-04-08 13:08:28,126 [INFO] [HOST] Starting telemetry collection workflow...
+2025-04-08 13:08:28,261 [INFO] [FRIDA] PS App already running with pid 11007. Switching to foreground...
+2025-04-08 13:08:28,261 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 13:08:30,315 [INFO] [ADB] Swiping from (191, 863) to (191, 1927)
+2025-04-08 13:08:30,928 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 13:08:30,929 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 13:08:57,978 [INFO] [FRIDA] Xbox already running with pid 11295. Switching to foreground...
+2025-04-08 13:08:57,979 [INFO] [ADB] Bringing com.microsoft.xboxone.smartglass/com.microsoft.xbox.MainActivity to foreground
+2025-04-08 13:09:00,063 [INFO] [ADB] Swiping from (769, 815) to (769, 1834)
+2025-04-08 13:09:00,638 [INFO] [FRIDA] Script loaded for com.microsoft.xboxone.smartglass from scrape_xbox.js.
+2025-04-08 13:09:00,639 [INFO] [HOST] Waiting for Xbox telemetry...
+2025-04-08 13:12:50,658 [INFO] [HOST] Loaded previous status data from data/telemetry_2025-04-08.csv
+2025-04-08 13:12:50,659 [INFO] [HOST] Killing any running frida-server instance...
+2025-04-08 13:12:51,829 [INFO] [HOST] Device is already in root mode. Proceeding...
+2025-04-08 13:12:51,829 [INFO] [HOST] Starting frida-server on device...
+2025-04-08 13:12:53,857 [INFO] [HOST] frida-server should now be running.
+2025-04-08 13:12:53,858 [INFO] [HOST] Starting telemetry collection workflow...
+2025-04-08 13:12:53,977 [INFO] [FRIDA] PS App already running with pid 12010. Switching to foreground...
+2025-04-08 13:12:53,977 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 13:12:59,029 [INFO] [ADB] Swiping from (402, 877) to (402, 1947)
+2025-04-08 13:12:59,631 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 13:12:59,631 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 13:13:39,883 [INFO] [HOST] Loaded previous status data from data/telemetry_2025-04-08.csv
+2025-04-08 13:13:39,883 [INFO] [HOST] Killing any running frida-server instance...
+2025-04-08 13:13:41,032 [INFO] [HOST] Device is already in root mode. Proceeding...
+2025-04-08 13:13:41,032 [INFO] [HOST] Starting frida-server on device...
+2025-04-08 13:13:43,051 [INFO] [HOST] frida-server should now be running.
+2025-04-08 13:13:43,053 [INFO] [HOST] Starting telemetry collection workflow...
+2025-04-08 13:13:43,167 [INFO] [FRIDA] PS App already running with pid 12010. Switching to foreground...
+2025-04-08 13:13:43,167 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 13:13:48,279 [INFO] [ADB] Swiping from (468, 816) to (468, 1842)
+2025-04-08 13:13:48,869 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 13:13:48,870 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 13:14:13,843 [INFO] [HOST] Loaded previous status data from data/telemetry_2025-04-08.csv
+2025-04-08 13:14:13,843 [INFO] [HOST] Killing any running frida-server instance...
+2025-04-08 13:14:14,964 [INFO] [HOST] Device is already in root mode. Proceeding...
+2025-04-08 13:14:14,964 [INFO] [HOST] Starting frida-server on device...
+2025-04-08 13:14:16,983 [INFO] [HOST] frida-server should now be running.
+2025-04-08 13:14:16,986 [INFO] [HOST] Starting telemetry collection workflow...
+2025-04-08 13:14:17,127 [INFO] [FRIDA] PS App already running with pid 12547. Switching to foreground...
+2025-04-08 13:14:17,127 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 13:14:22,173 [INFO] [ADB] Swiping from (537, 684) to (537, 1846)
+2025-04-08 13:14:22,824 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 13:14:22,825 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 13:14:49,865 [INFO] [FRIDA] Xbox already running with pid 11295. Switching to foreground...
+2025-04-08 13:14:49,867 [INFO] [ADB] Bringing com.microsoft.xboxone.smartglass/com.microsoft.xbox.MainActivity to foreground
+2025-04-08 13:14:54,925 [INFO] [ADB] Swiping from (166, 683) to (166, 1899)
+2025-04-08 13:14:56,157 [INFO] [HOST] Loaded previous status data from data/telemetry_2025-04-08.csv
+2025-04-08 13:14:56,157 [INFO] [HOST] Killing any running frida-server instance...
+2025-04-08 13:14:57,289 [INFO] [HOST] Device is already in root mode. Proceeding...
+2025-04-08 13:14:57,289 [INFO] [HOST] Starting frida-server on device...
+2025-04-08 13:14:59,309 [INFO] [HOST] frida-server should now be running.
+2025-04-08 13:14:59,311 [INFO] [HOST] Starting telemetry collection workflow...
+2025-04-08 13:14:59,429 [INFO] [FRIDA] PS App already running with pid 12547. Switching to foreground...
+2025-04-08 13:14:59,429 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 13:15:04,474 [INFO] [ADB] Swiping from (807, 745) to (807, 1828)
+2025-04-08 13:15:05,099 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 13:15:05,100 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 13:19:23,276 [INFO] [HOST] Loaded previous status data from data/telemetry_2025-04-08.csv
+2025-04-08 13:19:23,276 [INFO] [HOST] Killing any running frida-server instance...
+2025-04-08 13:19:24,437 [INFO] [HOST] Device is already in root mode. Proceeding...
+2025-04-08 13:19:24,437 [INFO] [HOST] Starting frida-server on device...
+2025-04-08 13:19:26,464 [INFO] [HOST] frida-server should now be running.
+2025-04-08 13:19:26,466 [INFO] [HOST] Starting telemetry collection workflow...
+2025-04-08 13:19:26,599 [INFO] [FRIDA] PS App already running with pid 12547. Switching to foreground...
+2025-04-08 13:19:26,599 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 13:19:31,644 [INFO] [ADB] Swiping from (216, 740) to (216, 1998)
+2025-04-08 13:19:32,197 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 13:19:32,198 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 13:19:41,072 [INFO] [HOST] Loaded previous status data from data/telemetry_2025-04-08.csv
+2025-04-08 13:19:41,073 [INFO] [HOST] Killing any running frida-server instance...
+2025-04-08 13:19:42,213 [INFO] [HOST] Device is already in root mode. Proceeding...
+2025-04-08 13:19:42,213 [INFO] [HOST] Starting frida-server on device...
+2025-04-08 13:19:44,235 [INFO] [HOST] frida-server should now be running.
+2025-04-08 13:19:44,236 [INFO] [HOST] Starting telemetry collection workflow...
+2025-04-08 13:19:44,357 [INFO] [FRIDA] com.scee.psxandroid not running. Spawning...
+2025-04-08 13:19:44,440 [INFO] [FRIDA] Spawned com.scee.psxandroid with pid 13210.
+2025-04-08 13:19:44,586 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 13:19:44,587 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 13:20:11,628 [INFO] [FRIDA] Xbox already running with pid 11295. Switching to foreground...
+2025-04-08 13:20:11,629 [INFO] [ADB] Bringing com.microsoft.xboxone.smartglass/com.microsoft.xbox.MainActivity to foreground
+2025-04-08 13:25:19,208 [INFO] [HOST] Loaded previous status data from data/telemetry_2025-04-08.csv
+2025-04-08 13:25:19,209 [INFO] [HOST] Killing any running frida-server instance...
+2025-04-08 13:25:20,360 [INFO] [HOST] Device is already in root mode. Proceeding...
+2025-04-08 13:25:20,361 [INFO] [HOST] Starting frida-server on device...
+2025-04-08 13:25:22,385 [INFO] [HOST] frida-server should now be running.
+2025-04-08 13:25:22,388 [INFO] [HOST] Starting telemetry collection workflow...
+2025-04-08 13:25:22,495 [INFO] [FRIDA] PS App already running with pid 13210. Switching to foreground...
+2025-04-08 13:25:22,495 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 13:25:27,543 [INFO] [ADB] Swiping from (341, 866) to (341, 1883)
+2025-04-08 13:25:28,157 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 13:25:28,158 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 13:32:48,371 [INFO] [HOST] Loaded previous status data from data/telemetry_2025-04-08.csv
+2025-04-08 13:32:48,372 [INFO] [HOST] Killing any running frida-server instance...
+2025-04-08 13:32:49,534 [INFO] [HOST] Device is already in root mode. Proceeding...
+2025-04-08 13:32:49,535 [INFO] [HOST] Starting frida-server on device...
+2025-04-08 13:32:51,561 [INFO] [HOST] frida-server should now be running.
+2025-04-08 13:32:51,562 [INFO] [HOST] Starting telemetry collection workflow...
+2025-04-08 13:32:51,676 [INFO] [FRIDA] PS App already running with pid 13210. Switching to foreground...
+2025-04-08 13:32:51,676 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 13:32:56,727 [INFO] [ADB] Swiping from (540, 727) to (540, 1917)
+2025-04-08 13:32:57,332 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 13:32:57,333 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 13:33:18,540 [INFO] [HOST] Loaded previous status data from data/telemetry_2025-04-08.csv
+2025-04-08 13:33:18,540 [INFO] [HOST] Killing any running frida-server instance...
+2025-04-08 13:33:19,687 [INFO] [HOST] Device is already in root mode. Proceeding...
+2025-04-08 13:33:19,688 [INFO] [HOST] Starting frida-server on device...
+2025-04-08 13:33:21,705 [INFO] [HOST] frida-server should now be running.
+2025-04-08 13:33:21,707 [INFO] [HOST] Starting telemetry collection workflow...
+2025-04-08 13:33:21,832 [INFO] [FRIDA] com.scee.psxandroid not running. Spawning...
+2025-04-08 13:33:21,906 [INFO] [FRIDA] Spawned com.scee.psxandroid with pid 13851.
+2025-04-08 13:33:22,043 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 13:33:22,043 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 13:33:58,079 [INFO] [FRIDA] Xbox already running with pid 11295. Switching to foreground...
+2025-04-08 13:33:58,079 [INFO] [ADB] Bringing com.microsoft.xboxone.smartglass/com.microsoft.xbox.MainActivity to foreground
+2025-04-08 13:34:00,620 [INFO] [HOST] Loaded previous status data from data/telemetry_2025-04-08.csv
+2025-04-08 13:34:00,620 [INFO] [HOST] Killing any running frida-server instance...
+2025-04-08 13:34:01,764 [INFO] [HOST] Device is already in root mode. Proceeding...
+2025-04-08 13:34:01,764 [INFO] [HOST] Starting frida-server on device...
+2025-04-08 13:34:03,787 [INFO] [HOST] frida-server should now be running.
+2025-04-08 13:34:03,790 [INFO] [HOST] Starting telemetry collection workflow...
+2025-04-08 13:34:03,896 [INFO] [FRIDA] PS App already running with pid 13851. Switching to foreground...
+2025-04-08 13:34:03,896 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 13:34:08,950 [INFO] [ADB] Swiping from (575, 857) to (575, 1924)
+2025-04-08 13:34:09,587 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 13:34:09,588 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 13:34:45,651 [INFO] [FRIDA] Xbox already running with pid 11295. Switching to foreground...
+2025-04-08 13:34:45,653 [INFO] [ADB] Bringing com.microsoft.xboxone.smartglass/com.microsoft.xbox.MainActivity to foreground
+2025-04-08 13:34:50,743 [INFO] [ADB] Swiping from (327, 820) to (327, 1982)
+2025-04-08 13:34:51,325 [INFO] [FRIDA] Script loaded for com.microsoft.xboxone.smartglass from scrape_xbox.js.
+2025-04-08 13:34:51,326 [INFO] [HOST] Waiting for Xbox telemetry...
+2025-04-08 13:35:27,331 [INFO] [HOST] Cycle complete. Waiting 32.668488 seconds until next cycle...
+2025-04-08 13:36:00,061 [INFO] [FRIDA] PS App already running with pid 13851. Switching to foreground...
+2025-04-08 13:36:00,062 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 13:36:05,128 [INFO] [ADB] Swiping from (811, 707) to (811, 1823)
+2025-04-08 13:36:05,547 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 13:36:05,547 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 13:36:41,617 [INFO] [FRIDA] Xbox already running with pid 11295. Switching to foreground...
+2025-04-08 13:36:41,618 [INFO] [ADB] Bringing com.microsoft.xboxone.smartglass/com.microsoft.xbox.MainActivity to foreground
+2025-04-08 13:36:46,694 [INFO] [ADB] Swiping from (335, 671) to (335, 1935)
+2025-04-08 13:36:47,092 [INFO] [FRIDA] Script loaded for com.microsoft.xboxone.smartglass from scrape_xbox.js.
+2025-04-08 13:36:47,092 [INFO] [HOST] Waiting for Xbox telemetry...
+2025-04-08 13:37:23,096 [INFO] [HOST] Cycle complete. Waiting 36.904036 seconds until next cycle...
+2025-04-08 13:38:00,062 [INFO] [FRIDA] PS App already running with pid 13851. Switching to foreground...
+2025-04-08 13:38:00,063 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 13:40:37,151 [INFO] [HOST] Loaded previous status data from data/telemetry_2025-04-08.csv
+2025-04-08 13:40:37,151 [INFO] [HOST] Killing any running frida-server instance...
+2025-04-08 13:40:38,286 [INFO] [HOST] Device is already in root mode. Proceeding...
+2025-04-08 13:40:38,287 [INFO] [HOST] Starting frida-server on device...
+2025-04-08 13:40:40,302 [INFO] [HOST] frida-server should now be running.
+2025-04-08 13:40:40,302 [INFO] [HOST] Starting telemetry collection workflow...
+2025-04-08 13:40:40,411 [INFO] [FRIDA] PS App already running with pid 13851. Switching to foreground...
+2025-04-08 13:40:40,411 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 13:40:45,467 [INFO] [ADB] Swiping from (444, 813) to (444, 1924)
+2025-04-08 13:40:46,084 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 13:40:46,085 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 13:43:57,861 [INFO] [HOST] Loaded previous status data from data/telemetry_2025-04-08.csv
+2025-04-08 13:43:57,861 [INFO] [HOST] Killing any running frida-server instance...
+2025-04-08 13:43:59,004 [INFO] [HOST] Device is already in root mode. Proceeding...
+2025-04-08 13:43:59,005 [INFO] [HOST] Starting frida-server on device...
+2025-04-08 13:44:01,044 [INFO] [HOST] frida-server should now be running.
+2025-04-08 13:44:01,045 [INFO] [HOST] Starting telemetry collection workflow...
+2025-04-08 13:44:01,179 [INFO] [FRIDA] PS App already running with pid 13851. Switching to foreground...
+2025-04-08 13:44:01,179 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 13:44:06,739 [INFO] [HOST] Loaded previous status data from data/telemetry_2025-04-08.csv
+2025-04-08 13:44:06,740 [INFO] [HOST] Killing any running frida-server instance...
+2025-04-08 13:44:07,912 [INFO] [HOST] Device is already in root mode. Proceeding...
+2025-04-08 13:44:07,913 [INFO] [HOST] Starting frida-server on device...
+2025-04-08 13:44:09,933 [INFO] [HOST] frida-server should now be running.
+2025-04-08 13:44:09,934 [INFO] [HOST] Starting telemetry collection workflow...
+2025-04-08 13:44:10,034 [INFO] [FRIDA] PS App already running with pid 13851. Switching to foreground...
+2025-04-08 13:44:10,034 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 13:44:15,080 [INFO] [ADB] Swiping from (754, 756) to (754, 1837)
+2025-04-08 13:44:15,699 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 13:44:15,699 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 13:44:48,287 [INFO] [HOST] Loaded previous status data from data/telemetry_2025-04-08.csv
+2025-04-08 13:44:48,287 [INFO] [HOST] Killing any running frida-server instance...
+2025-04-08 13:44:49,431 [INFO] [HOST] Device is already in root mode. Proceeding...
+2025-04-08 13:44:49,431 [INFO] [HOST] Starting frida-server on device...
+2025-04-08 13:44:51,455 [INFO] [HOST] frida-server should now be running.
+2025-04-08 13:44:51,456 [INFO] [HOST] Starting telemetry collection workflow...
+2025-04-08 13:44:51,565 [INFO] [FRIDA] com.scee.psxandroid not running. Spawning...
+2025-04-08 13:44:51,633 [INFO] [FRIDA] Spawned com.scee.psxandroid with pid 14887.
+2025-04-08 13:44:51,769 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 13:44:51,770 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 13:53:50,982 [INFO] [HOST] Loaded previous status data from data/telemetry_2025-04-08.csv
+2025-04-08 13:53:50,982 [INFO] [HOST] Killing any running frida-server instance...
+2025-04-08 13:53:52,117 [INFO] [HOST] Device is already in root mode. Proceeding...
+2025-04-08 13:53:52,117 [INFO] [HOST] Starting frida-server on device...
+2025-04-08 13:53:54,133 [INFO] [HOST] frida-server should now be running.
+2025-04-08 13:53:54,134 [INFO] [HOST] Starting telemetry collection workflow...
+2025-04-08 13:53:54,282 [INFO] [FRIDA] PS App already running with pid 14887. Switching to foreground...
+2025-04-08 13:53:54,283 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 13:53:59,342 [INFO] [ADB] Swiping from (716, 807) to (716, 1803)
+2025-04-08 13:53:59,979 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 13:53:59,980 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 13:54:36,023 [INFO] [FRIDA] Xbox already running with pid 11295. Switching to foreground...
+2025-04-08 13:54:36,023 [INFO] [ADB] Bringing com.microsoft.xboxone.smartglass/com.microsoft.xbox.MainActivity to foreground
+2025-04-08 13:54:41,089 [INFO] [ADB] Swiping from (398, 633) to (398, 1993)
+2025-04-08 13:54:41,718 [INFO] [FRIDA] Script loaded for com.microsoft.xboxone.smartglass from scrape_xbox.js.
+2025-04-08 13:54:41,719 [INFO] [HOST] Waiting for Xbox telemetry...
+2025-04-08 13:54:45,151 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 13:54:45,151 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 13:54:45,151 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 13:55:17,722 [INFO] [HOST] Cycle complete. Waiting 42.278155 seconds until next cycle...
+2025-04-08 13:55:22,581 [INFO] [HOST] Loaded previous status data from data/telemetry_2025-04-08.csv
+2025-04-08 13:55:22,582 [INFO] [HOST] Killing any running frida-server instance...
+2025-04-08 13:55:23,723 [INFO] [HOST] Device is already in root mode. Proceeding...
+2025-04-08 13:55:23,723 [INFO] [HOST] Starting frida-server on device...
+2025-04-08 13:55:25,743 [INFO] [HOST] frida-server should now be running.
+2025-04-08 13:55:25,744 [INFO] [HOST] Starting telemetry collection workflow...
+2025-04-08 13:55:25,868 [INFO] [FRIDA] PS App already running with pid 14887. Switching to foreground...
+2025-04-08 13:55:25,868 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 13:55:30,915 [INFO] [ADB] Swiping from (795, 734) to (795, 1878)
+2025-04-08 13:55:31,523 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 13:55:31,524 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 13:56:07,588 [INFO] [FRIDA] Xbox already running with pid 11295. Switching to foreground...
+2025-04-08 13:56:07,590 [INFO] [ADB] Bringing com.microsoft.xboxone.smartglass/com.microsoft.xbox.MainActivity to foreground
+2025-04-08 13:56:12,675 [INFO] [ADB] Swiping from (216, 826) to (216, 1861)
+2025-04-08 13:56:13,311 [INFO] [FRIDA] Script loaded for com.microsoft.xboxone.smartglass from scrape_xbox.js.
+2025-04-08 13:56:13,312 [INFO] [HOST] Waiting for Xbox telemetry...
+2025-04-08 13:56:18,158 [INFO] [HOST] Loaded previous status data from data/telemetry_2025-04-08.csv
+2025-04-08 13:56:18,158 [INFO] [HOST] Killing any running frida-server instance...
+2025-04-08 13:56:19,299 [INFO] [HOST] Device is already in root mode. Proceeding...
+2025-04-08 13:56:19,299 [INFO] [HOST] Starting frida-server on device...
+2025-04-08 13:56:21,314 [INFO] [HOST] frida-server should now be running.
+2025-04-08 13:56:21,316 [INFO] [HOST] Starting telemetry collection workflow...
+2025-04-08 13:56:21,413 [INFO] [FRIDA] PS App already running with pid 15432. Switching to foreground...
+2025-04-08 13:56:21,414 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 13:56:26,455 [INFO] [ADB] Swiping from (455, 827) to (455, 1927)
+2025-04-08 13:56:27,087 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 13:56:27,087 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 13:57:35,800 [INFO] [HOST] Loaded previous status data from data/telemetry_2025-04-08.csv
+2025-04-08 13:57:35,801 [INFO] [HOST] Killing any running frida-server instance...
+2025-04-08 13:57:36,937 [INFO] [HOST] Device is already in root mode. Proceeding...
+2025-04-08 13:57:36,938 [INFO] [HOST] Starting frida-server on device...
+2025-04-08 13:57:38,963 [INFO] [HOST] frida-server should now be running.
+2025-04-08 13:57:38,964 [INFO] [HOST] Starting telemetry collection workflow...
+2025-04-08 13:57:40,175 [INFO] [FRIDA] PS App already running with pid 15432. Switching to foreground...
+2025-04-08 13:57:40,176 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 13:57:45,218 [INFO] [ADB] Swiping from (873, 709) to (873, 1989)
+2025-04-08 13:57:45,836 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 13:57:45,836 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 13:58:50,123 [INFO] [HOST] Loaded previous status data from data/telemetry_2025-04-08.csv
+2025-04-08 13:58:50,123 [INFO] [HOST] Killing any running frida-server instance...
+2025-04-08 13:58:51,267 [INFO] [HOST] Device is already in root mode. Proceeding...
+2025-04-08 13:58:51,267 [INFO] [HOST] Starting frida-server on device...
+2025-04-08 13:58:53,285 [INFO] [HOST] frida-server should now be running.
+2025-04-08 13:58:53,291 [INFO] [HOST] Starting telemetry collection workflow...
+2025-04-08 13:58:53,415 [INFO] [FRIDA] PS App already running with pid 15432. Switching to foreground...
+2025-04-08 13:58:53,415 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 13:58:58,467 [INFO] [ADB] Swiping from (659, 665) to (659, 1962)
+2025-04-08 13:58:59,068 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 13:58:59,068 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 13:59:11,722 [INFO] [HOST] Loaded previous status data from data/telemetry_2025-04-08.csv
+2025-04-08 13:59:11,722 [INFO] [HOST] Killing any running frida-server instance...
+2025-04-08 13:59:12,856 [INFO] [HOST] Device is already in root mode. Proceeding...
+2025-04-08 13:59:12,857 [INFO] [HOST] Starting frida-server on device...
+2025-04-08 13:59:14,877 [INFO] [HOST] frida-server should now be running.
+2025-04-08 13:59:14,878 [INFO] [HOST] Starting telemetry collection workflow...
+2025-04-08 13:59:14,987 [INFO] [FRIDA] com.scee.psxandroid not running. Spawning...
+2025-04-08 13:59:15,052 [INFO] [FRIDA] Spawned com.scee.psxandroid with pid 16143.
+2025-04-08 13:59:15,189 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 13:59:15,189 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 14:00:02,473 [INFO] [HOST] Loaded previous status data from data/telemetry_2025-04-08.csv
+2025-04-08 14:00:02,473 [INFO] [HOST] Killing any running frida-server instance...
+2025-04-08 14:00:03,596 [INFO] [HOST] Device is already in root mode. Proceeding...
+2025-04-08 14:00:03,597 [INFO] [HOST] Starting frida-server on device...
+2025-04-08 14:00:05,619 [INFO] [HOST] frida-server should now be running.
+2025-04-08 14:00:05,620 [INFO] [HOST] Starting telemetry collection workflow...
+2025-04-08 14:00:05,768 [INFO] [FRIDA] com.scee.psxandroid not running. Spawning...
+2025-04-08 14:00:05,838 [INFO] [FRIDA] Spawned com.scee.psxandroid with pid 16507.
+2025-04-08 14:00:05,981 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 14:00:05,982 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 14:03:36,320 [INFO] [HOST] Loaded previous status data from data/telemetry_2025-04-08.csv
+2025-04-08 14:03:36,322 [INFO] [HOST] Killing any running frida-server instance...
+2025-04-08 14:03:37,501 [INFO] [HOST] Device is already in root mode. Proceeding...
+2025-04-08 14:03:37,501 [INFO] [HOST] Starting frida-server on device...
+2025-04-08 14:03:39,525 [INFO] [HOST] frida-server should now be running.
+2025-04-08 14:03:39,526 [INFO] [HOST] Starting telemetry collection workflow...
+2025-04-08 14:03:39,615 [INFO] [FRIDA] PS App already running with pid 16507. Switching to foreground...
+2025-04-08 14:03:39,615 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 14:03:45,611 [INFO] [HOST] Loaded previous status data from data/telemetry_2025-04-08.csv
+2025-04-08 14:03:45,611 [INFO] [HOST] Killing any running frida-server instance...
+2025-04-08 14:03:46,767 [INFO] [HOST] Device is already in root mode. Proceeding...
+2025-04-08 14:03:46,768 [INFO] [HOST] Starting frida-server on device...
+2025-04-08 14:03:48,791 [INFO] [HOST] frida-server should now be running.
+2025-04-08 14:03:48,793 [INFO] [HOST] Starting telemetry collection workflow...
+2025-04-08 14:03:48,903 [INFO] [FRIDA] com.scee.psxandroid not running. Spawning...
+2025-04-08 14:03:48,985 [INFO] [FRIDA] Spawned com.scee.psxandroid with pid 16862.
+2025-04-08 14:03:49,155 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 14:03:49,155 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 14:03:51,648 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:03:51,649 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:03:51,649 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:03:58,708 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:03:58,708 [DEBUG] Change detected for key ('PlayStation', '461699146552757965'): old_status='online', new_status='offline'
+2025-04-08 14:03:58,709 [DEBUG] process_csv_data: 1 new row(s) detected from platform PlayStation.
+2025-04-08 14:03:58,709 [INFO] update_daily_csv: Appended 1 row(s) to data/telemetry_2025-04-08.csv.
+2025-04-08 14:04:04,420 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:04:04,421 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:04:04,421 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:04:25,188 [INFO] [FRIDA] Xbox already running with pid 11295. Switching to foreground...
+2025-04-08 14:04:25,189 [INFO] [ADB] Bringing com.microsoft.xboxone.smartglass/com.microsoft.xbox.MainActivity to foreground
+2025-04-08 14:04:30,244 [INFO] [ADB] Swiping from (852, 904) to (852, 1868)
+2025-04-08 14:04:30,843 [INFO] [FRIDA] Script loaded for com.microsoft.xboxone.smartglass from scrape_xbox.js.
+2025-04-08 14:04:30,843 [INFO] [HOST] Waiting for Xbox telemetry...
+2025-04-08 14:05:06,848 [INFO] [HOST] Cycle complete. Waiting 53.152047 seconds until next cycle...
+2025-04-08 14:05:37,471 [INFO] [HOST] No existing data for today (data/telemetry_2025-04-08.csv). Starting fresh.
+2025-04-08 14:05:37,471 [INFO] [HOST] Killing any running frida-server instance...
+2025-04-08 14:05:38,610 [INFO] [HOST] Device is already in root mode. Proceeding...
+2025-04-08 14:05:38,610 [INFO] [HOST] Starting frida-server on device...
+2025-04-08 14:05:40,631 [INFO] [HOST] frida-server should now be running.
+2025-04-08 14:05:40,633 [INFO] [HOST] Starting telemetry collection workflow...
+2025-04-08 14:05:40,748 [INFO] [FRIDA] PS App already running with pid 16862. Switching to foreground...
+2025-04-08 14:05:40,748 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 14:05:45,813 [INFO] [ADB] Swiping from (721, 796) to (721, 1889)
+2025-04-08 14:05:46,451 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 14:05:46,452 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 14:05:47,257 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:05:47,257 [DEBUG] Change detected for key ('PlayStation', '4645135650815230075'): old_status=None, new_status='offline'
+2025-04-08 14:05:47,258 [DEBUG] Change detected for key ('PlayStation', '461699146552757965'): old_status=None, new_status='offline'
+2025-04-08 14:05:47,258 [DEBUG] process_csv_data: 2 new row(s) detected from platform PlayStation.
+2025-04-08 14:05:47,259 [DEBUG] update_daily_csv: Creating new file and writing header to data/telemetry_2025-04-08.csv.
+2025-04-08 14:05:47,260 [INFO] update_daily_csv: Appended 2 row(s) to data/telemetry_2025-04-08.csv.
+2025-04-08 14:06:22,534 [INFO] [FRIDA] Xbox already running with pid 11295. Switching to foreground...
+2025-04-08 14:06:22,535 [INFO] [ADB] Bringing com.microsoft.xboxone.smartglass/com.microsoft.xbox.MainActivity to foreground
+2025-04-08 14:06:27,654 [INFO] [ADB] Swiping from (228, 698) to (228, 1872)
+2025-04-08 14:06:28,237 [INFO] [FRIDA] Script loaded for com.microsoft.xboxone.smartglass from scrape_xbox.js.
+2025-04-08 14:06:28,238 [INFO] [HOST] Waiting for Xbox telemetry...
+2025-04-08 14:06:32,394 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:06:32,395 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:06:32,395 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:07:04,242 [INFO] [HOST] Cycle complete. Waiting 55.757520 seconds until next cycle...
+2025-04-08 14:08:00,065 [INFO] [FRIDA] PS App already running with pid 16862. Switching to foreground...
+2025-04-08 14:08:00,066 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 14:08:00,964 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:08:00,965 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:08:00,965 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:08:05,155 [INFO] [ADB] Swiping from (702, 663) to (702, 1871)
+2025-04-08 14:08:05,578 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 14:08:05,579 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 14:08:06,381 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:08:06,382 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:08:06,382 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:08:06,384 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:08:06,385 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:08:06,385 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:08:41,640 [INFO] [FRIDA] Xbox already running with pid 11295. Switching to foreground...
+2025-04-08 14:08:41,641 [INFO] [ADB] Bringing com.microsoft.xboxone.smartglass/com.microsoft.xbox.MainActivity to foreground
+2025-04-08 14:08:46,725 [INFO] [ADB] Swiping from (646, 664) to (646, 1996)
+2025-04-08 14:08:47,128 [INFO] [FRIDA] Script loaded for com.microsoft.xboxone.smartglass from scrape_xbox.js.
+2025-04-08 14:08:47,128 [INFO] [HOST] Waiting for Xbox telemetry...
+2025-04-08 14:08:47,812 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:08:47,813 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:08:47,813 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:08:47,872 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:08:47,872 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:08:47,872 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:08:48,513 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:08:48,513 [DEBUG] Change detected for key ('Xbox', '2535446604024844'): old_status=None, new_status='Offline'
+2025-04-08 14:08:48,513 [DEBUG] Change detected for key ('Xbox', '2535430191904937'): old_status=None, new_status='Offline'
+2025-04-08 14:08:48,514 [DEBUG] process_csv_data: 2 new row(s) detected from platform Xbox.
+2025-04-08 14:08:48,514 [INFO] update_daily_csv: Appended 2 row(s) to data/telemetry_2025-04-08.csv.
+2025-04-08 14:08:48,558 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:08:48,558 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:08:48,558 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:09:23,132 [INFO] [HOST] Cycle complete. Waiting 36.867696 seconds until next cycle...
+2025-04-08 14:10:00,051 [INFO] [FRIDA] PS App already running with pid 16862. Switching to foreground...
+2025-04-08 14:10:00,052 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 14:10:00,938 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:10:00,939 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:10:00,939 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:10:00,939 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:10:00,939 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:10:00,939 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:10:05,138 [INFO] [ADB] Swiping from (280, 646) to (280, 1942)
+2025-04-08 14:10:05,597 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 14:10:05,597 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 14:10:06,461 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:10:06,461 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:10:06,461 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:10:06,464 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:10:06,464 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:10:06,464 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:10:06,465 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:10:06,466 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:10:06,466 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:10:41,672 [INFO] [FRIDA] Xbox already running with pid 11295. Switching to foreground...
+2025-04-08 14:10:41,672 [INFO] [ADB] Bringing com.microsoft.xboxone.smartglass/com.microsoft.xbox.MainActivity to foreground
+2025-04-08 14:10:46,744 [INFO] [ADB] Swiping from (865, 873) to (865, 1855)
+2025-04-08 14:10:47,177 [INFO] [FRIDA] Script loaded for com.microsoft.xboxone.smartglass from scrape_xbox.js.
+2025-04-08 14:10:47,177 [INFO] [HOST] Waiting for Xbox telemetry...
+2025-04-08 14:10:47,775 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:10:47,776 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:10:47,776 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:10:47,794 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:10:47,795 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:10:47,795 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:10:47,821 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:10:47,821 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:10:47,822 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:10:47,841 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:10:47,841 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:10:47,841 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:10:47,930 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:10:47,930 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:10:47,931 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:10:48,009 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:10:48,009 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:10:48,009 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:11:23,180 [INFO] [HOST] Cycle complete. Waiting 36.819345 seconds until next cycle...
+2025-04-08 14:12:00,047 [INFO] [FRIDA] PS App already running with pid 16862. Switching to foreground...
+2025-04-08 14:12:00,047 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 14:12:01,057 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:12:01,057 [DEBUG] Change detected for key ('PlayStation', '4645135650815230075'): old_status='offline', new_status='online'
+2025-04-08 14:12:01,058 [DEBUG] process_csv_data: 1 new row(s) detected from platform PlayStation.
+2025-04-08 14:12:01,058 [INFO] update_daily_csv: Appended 1 row(s) to data/telemetry_2025-04-08.csv.
+2025-04-08 14:12:01,059 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:12:01,059 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:12:01,059 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:12:01,059 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:12:01,059 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:12:01,059 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:12:05,108 [INFO] [ADB] Swiping from (492, 854) to (492, 1952)
+2025-04-08 14:12:05,520 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 14:12:05,521 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 14:12:06,402 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:12:06,402 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:12:06,402 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:12:06,403 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:12:06,404 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:12:06,404 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:12:06,407 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:12:06,407 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:12:06,407 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:12:06,408 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:12:06,408 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:12:06,408 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:12:41,589 [INFO] [FRIDA] Xbox already running with pid 11295. Switching to foreground...
+2025-04-08 14:12:41,590 [INFO] [ADB] Bringing com.microsoft.xboxone.smartglass/com.microsoft.xbox.MainActivity to foreground
+2025-04-08 14:12:46,676 [INFO] [ADB] Swiping from (281, 612) to (281, 1834)
+2025-04-08 14:12:47,090 [INFO] [FRIDA] Script loaded for com.microsoft.xboxone.smartglass from scrape_xbox.js.
+2025-04-08 14:12:47,091 [INFO] [HOST] Waiting for Xbox telemetry...
+2025-04-08 14:12:47,595 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:12:47,595 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:12:47,595 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:12:47,608 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:12:47,608 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:12:47,608 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:12:47,615 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:12:47,615 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:12:47,615 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:12:47,678 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:12:47,679 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:12:47,679 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:12:47,848 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:12:47,848 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:12:47,848 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:12:47,906 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:12:47,906 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:12:47,906 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:12:47,946 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:12:47,947 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:12:47,947 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:12:47,992 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:12:47,992 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:12:47,992 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:13:23,097 [INFO] [HOST] Cycle complete. Waiting 36.902840 seconds until next cycle...
+2025-04-08 14:14:00,057 [INFO] [FRIDA] PS App already running with pid 16862. Switching to foreground...
+2025-04-08 14:14:00,058 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 14:14:00,943 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:14:00,943 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:14:00,943 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:14:00,945 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:14:00,946 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:14:00,947 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:14:00,949 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:14:00,949 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:14:00,949 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:14:00,949 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:14:00,950 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:14:00,950 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:14:05,122 [INFO] [ADB] Swiping from (769, 669) to (769, 1938)
+2025-04-08 14:14:05,531 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 14:14:05,531 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 14:14:06,355 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:14:06,355 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:14:06,355 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:14:06,359 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:14:06,360 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:14:06,360 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:14:06,360 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:14:06,360 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:14:06,360 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:14:06,360 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:14:06,361 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:14:06,361 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:14:06,361 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:14:06,361 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:14:06,362 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:14:41,590 [INFO] [FRIDA] Xbox already running with pid 11295. Switching to foreground...
+2025-04-08 14:14:41,591 [INFO] [ADB] Bringing com.microsoft.xboxone.smartglass/com.microsoft.xbox.MainActivity to foreground
+2025-04-08 14:14:46,674 [INFO] [ADB] Swiping from (513, 724) to (513, 1924)
+2025-04-08 14:14:47,081 [INFO] [FRIDA] Script loaded for com.microsoft.xboxone.smartglass from scrape_xbox.js.
+2025-04-08 14:14:47,082 [INFO] [HOST] Waiting for Xbox telemetry...
+2025-04-08 14:14:47,595 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:14:47,595 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:14:47,596 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:14:47,608 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:14:47,609 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:14:47,609 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:14:47,621 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:14:47,622 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:14:47,622 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:14:47,631 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:14:47,631 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:14:47,631 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:14:47,691 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:14:47,691 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:14:47,691 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:14:48,042 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:14:48,042 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:14:48,042 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:14:48,078 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:14:48,078 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:14:48,079 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:14:48,115 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:14:48,115 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:14:48,115 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:14:48,157 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:14:48,157 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:14:48,157 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:14:48,194 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:14:48,195 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:14:48,195 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:15:23,087 [INFO] [HOST] Cycle complete. Waiting 36.912881 seconds until next cycle...
+2025-04-08 14:16:00,048 [INFO] [FRIDA] PS App already running with pid 16862. Switching to foreground...
+2025-04-08 14:16:00,049 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 14:16:01,032 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:16:01,032 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:16:01,032 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:16:01,034 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:16:01,034 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:16:01,034 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:16:01,035 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:16:01,036 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:16:01,036 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:16:01,036 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:16:01,036 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:16:01,036 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:16:01,037 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:16:01,037 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:16:01,037 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:16:05,117 [INFO] [ADB] Swiping from (867, 752) to (867, 1849)
+2025-04-08 14:16:05,590 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 14:16:05,590 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 14:16:06,460 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:16:06,465 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:16:06,467 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:16:06,468 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:16:06,470 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:16:06,470 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:16:06,472 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:16:06,474 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:16:06,475 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:16:06,476 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:16:06,476 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:16:06,476 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:16:06,477 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:16:06,477 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:16:06,477 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:16:06,477 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:16:06,477 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:16:06,477 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:16:41,671 [INFO] [FRIDA] Xbox already running with pid 11295. Switching to foreground...
+2025-04-08 14:16:41,674 [INFO] [ADB] Bringing com.microsoft.xboxone.smartglass/com.microsoft.xbox.MainActivity to foreground
+2025-04-08 14:16:46,752 [INFO] [ADB] Swiping from (777, 708) to (777, 1830)
+2025-04-08 14:16:48,106 [INFO] [FRIDA] Script loaded for com.microsoft.xboxone.smartglass from scrape_xbox.js.
+2025-04-08 14:16:48,107 [INFO] [HOST] Waiting for Xbox telemetry...
+2025-04-08 14:16:49,599 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:16:49,599 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:16:49,599 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:16:49,608 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:16:49,608 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:16:49,608 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:16:49,615 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:16:49,615 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:16:49,616 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:16:49,626 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:16:49,627 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:16:49,627 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:16:49,643 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:16:49,643 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:16:49,643 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:16:49,683 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:16:49,683 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:16:49,683 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:16:49,739 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:16:49,739 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:16:49,739 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:16:49,758 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:16:49,759 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:16:49,759 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:16:49,793 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:16:49,794 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:16:49,794 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:16:49,831 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:16:49,831 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:16:49,831 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:16:49,873 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:16:49,874 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:16:49,874 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:16:49,910 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:16:49,910 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:16:49,910 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:17:24,110 [INFO] [HOST] Cycle complete. Waiting 35.889487 seconds until next cycle...
+2025-04-08 14:18:00,029 [INFO] [FRIDA] PS App already running with pid 16862. Switching to foreground...
+2025-04-08 14:18:00,029 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 14:18:00,955 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:18:00,956 [DEBUG] Change detected for key ('PlayStation', '4645135650815230075'): old_status='online', new_status='offline'
+2025-04-08 14:18:00,956 [DEBUG] process_csv_data: 1 new row(s) detected from platform PlayStation.
+2025-04-08 14:18:00,957 [INFO] update_daily_csv: Appended 1 row(s) to data/telemetry_2025-04-08.csv.
+2025-04-08 14:18:00,958 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:18:00,958 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:18:00,959 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:18:00,961 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:18:00,963 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:18:00,963 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:18:00,967 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:18:00,968 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:18:00,968 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:18:00,968 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:18:00,968 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:18:00,968 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:18:00,969 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:18:00,969 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:18:00,969 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:18:05,089 [INFO] [ADB] Swiping from (840, 730) to (840, 1851)
+2025-04-08 14:18:05,503 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 14:18:05,503 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 14:18:06,330 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:18:06,330 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:18:06,330 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:18:06,330 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:18:06,330 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:18:06,330 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:18:06,330 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:18:06,330 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:18:06,330 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:18:06,336 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:18:06,336 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:18:06,336 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:18:06,336 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:18:06,336 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:18:06,336 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:18:06,336 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:18:06,336 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:18:06,336 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:18:06,336 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:18:06,336 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:18:06,337 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:18:41,564 [INFO] [FRIDA] Xbox already running with pid 11295. Switching to foreground...
+2025-04-08 14:18:41,567 [INFO] [ADB] Bringing com.microsoft.xboxone.smartglass/com.microsoft.xbox.MainActivity to foreground
+2025-04-08 14:18:46,633 [INFO] [ADB] Swiping from (624, 840) to (624, 1859)
+2025-04-08 14:18:47,012 [INFO] [FRIDA] Script loaded for com.microsoft.xboxone.smartglass from scrape_xbox.js.
+2025-04-08 14:18:47,013 [INFO] [HOST] Waiting for Xbox telemetry...
+2025-04-08 14:18:47,534 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:18:47,534 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:18:47,534 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:18:47,577 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:18:47,578 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:18:47,578 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:18:47,620 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:18:47,620 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:18:47,620 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:18:47,666 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:18:47,667 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:18:47,667 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:18:47,686 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:18:47,687 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:18:47,687 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:18:47,704 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:18:47,705 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:18:47,705 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:18:47,709 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:18:47,709 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:18:47,709 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:18:47,732 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:18:47,732 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:18:47,732 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:18:47,747 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:18:47,747 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:18:47,747 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:18:47,768 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:18:47,769 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:18:47,769 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:18:47,793 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:18:47,794 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:18:47,794 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:18:47,868 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:18:47,869 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:18:47,869 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:18:47,880 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:18:47,880 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:18:47,880 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:18:47,911 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:18:47,912 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:18:47,912 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:19:23,017 [INFO] [HOST] Cycle complete. Waiting 36.982270 seconds until next cycle...
+2025-04-08 14:20:00,042 [INFO] [FRIDA] PS App already running with pid 16862. Switching to foreground...
+2025-04-08 14:20:00,043 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 14:20:01,045 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:20:01,045 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:20:01,045 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:20:01,047 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:20:01,048 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:20:01,048 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:20:01,049 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:20:01,049 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:20:01,049 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:20:01,051 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:20:01,051 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:20:01,051 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:20:01,052 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:20:01,052 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:20:01,052 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:20:01,053 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:20:01,053 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:20:01,053 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:20:01,055 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:20:01,055 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:20:01,055 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:20:05,116 [INFO] [ADB] Swiping from (231, 756) to (231, 1901)
+2025-04-08 14:20:05,551 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 14:20:05,552 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 14:20:06,511 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:20:06,511 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:20:06,511 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:20:06,513 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:20:06,513 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:20:06,513 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:20:06,518 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:20:06,519 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:20:06,519 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:20:06,525 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:20:06,526 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:20:06,526 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:20:06,527 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:20:06,527 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:20:06,527 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:20:06,528 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:20:06,528 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:20:06,528 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:20:06,528 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:20:06,528 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:20:06,529 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:20:06,530 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:20:06,530 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:20:06,530 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:20:41,620 [INFO] [FRIDA] Xbox already running with pid 11295. Switching to foreground...
+2025-04-08 14:20:41,622 [INFO] [ADB] Bringing com.microsoft.xboxone.smartglass/com.microsoft.xbox.MainActivity to foreground
+2025-04-08 14:20:46,707 [INFO] [ADB] Swiping from (302, 615) to (302, 1812)
+2025-04-08 14:20:47,129 [INFO] [FRIDA] Script loaded for com.microsoft.xboxone.smartglass from scrape_xbox.js.
+2025-04-08 14:20:47,130 [INFO] [HOST] Waiting for Xbox telemetry...
+2025-04-08 14:20:47,623 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:20:47,624 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:20:47,624 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:20:47,629 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:20:47,629 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:20:47,629 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:20:47,638 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:20:47,638 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:20:47,638 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:20:47,660 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:20:47,660 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:20:47,660 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:20:47,676 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:20:47,676 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:20:47,676 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:20:47,694 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:20:47,694 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:20:47,694 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:20:47,711 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:20:47,711 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:20:47,712 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:20:47,734 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:20:47,735 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:20:47,735 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:20:47,793 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:20:47,794 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:20:47,794 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:20:47,806 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:20:47,806 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:20:47,806 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:20:47,843 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:20:47,843 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:20:47,844 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:20:47,880 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:20:47,881 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:20:47,881 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:20:47,916 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:20:47,917 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:20:47,917 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:20:47,955 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:20:47,956 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:20:47,956 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:20:47,992 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:20:47,993 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:20:47,993 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:20:48,028 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:20:48,028 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:20:48,028 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:21:23,134 [INFO] [HOST] Cycle complete. Waiting 36.866064 seconds until next cycle...
+2025-04-08 14:22:00,046 [INFO] [FRIDA] PS App already running with pid 16862. Switching to foreground...
+2025-04-08 14:22:00,048 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 14:22:01,062 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:22:01,063 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:22:01,063 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:22:01,066 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:22:01,066 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:22:01,066 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:22:01,068 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:22:01,068 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:22:01,068 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:22:01,069 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:22:01,069 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:22:01,069 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:22:01,070 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:22:01,070 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:22:01,070 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:22:01,070 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:22:01,071 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:22:01,071 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:22:01,071 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:22:01,071 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:22:01,071 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:22:01,072 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:22:01,072 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:22:01,072 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:22:05,160 [INFO] [ADB] Swiping from (395, 803) to (395, 1902)
+2025-04-08 14:22:05,563 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 14:22:05,564 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 14:22:06,363 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:22:06,363 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:22:06,363 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:22:06,363 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:22:06,364 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:22:06,364 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:22:06,364 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:22:06,364 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:22:06,364 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:22:06,366 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:22:06,366 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:22:06,366 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:22:06,369 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:22:06,369 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:22:06,369 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:22:06,371 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:22:06,371 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:22:06,371 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:22:06,374 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:22:06,375 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:22:06,375 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:22:06,378 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:22:06,378 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:22:06,378 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:22:06,379 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:22:06,379 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:22:06,379 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:22:41,631 [INFO] [FRIDA] Xbox already running with pid 11295. Switching to foreground...
+2025-04-08 14:22:41,634 [INFO] [ADB] Bringing com.microsoft.xboxone.smartglass/com.microsoft.xbox.MainActivity to foreground
+2025-04-08 14:22:46,716 [INFO] [ADB] Swiping from (643, 857) to (643, 1980)
+2025-04-08 14:22:47,103 [INFO] [FRIDA] Script loaded for com.microsoft.xboxone.smartglass from scrape_xbox.js.
+2025-04-08 14:22:47,103 [INFO] [HOST] Waiting for Xbox telemetry...
+2025-04-08 14:22:47,633 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:22:47,633 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:22:47,633 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:22:47,644 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:22:47,645 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:22:47,645 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:22:47,654 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:22:47,654 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:22:47,655 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:22:47,663 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:22:47,663 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:22:47,664 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:22:47,672 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:22:47,672 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:22:47,672 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:22:47,682 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:22:47,682 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:22:47,682 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:22:47,694 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:22:47,694 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:22:47,694 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:22:47,700 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:22:47,701 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:22:47,701 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:22:47,763 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:22:47,763 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:22:47,763 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:22:47,836 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:22:47,837 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:22:47,837 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:22:47,875 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:22:47,875 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:22:47,875 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:22:47,915 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:22:47,916 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:22:47,916 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:22:47,952 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:22:47,953 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:22:47,953 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:22:47,992 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:22:47,992 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:22:47,992 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:22:48,031 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:22:48,031 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:22:48,032 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:22:48,069 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:22:48,069 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:22:48,069 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:22:48,107 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:22:48,107 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:22:48,108 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:22:48,140 [INFO] [HOST] Received CSV data from Xbox
+2025-04-08 14:22:48,141 [DEBUG] process_csv_data: 0 new row(s) detected from platform Xbox.
+2025-04-08 14:22:48,141 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:23:23,108 [INFO] [HOST] Cycle complete. Waiting 36.891855 seconds until next cycle...
+2025-04-08 14:24:00,058 [INFO] [FRIDA] PS App already running with pid 16862. Switching to foreground...
+2025-04-08 14:24:00,059 [INFO] [ADB] Bringing com.scee.psxandroid/com.scee.psxandroid.activity.TopActivity to foreground
+2025-04-08 14:24:01,134 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:24:01,135 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:24:01,135 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:24:01,136 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:24:01,136 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:24:01,136 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:24:01,136 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:24:01,136 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:24:01,136 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:24:01,139 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:24:01,139 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:24:01,139 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:24:01,140 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:24:01,140 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:24:01,140 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:24:01,140 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:24:01,141 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:24:01,141 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:24:01,141 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:24:01,141 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:24:01,141 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:24:01,141 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:24:01,141 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:24:01,141 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:24:01,141 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:24:01,142 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:24:01,142 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:24:05,161 [INFO] [ADB] Swiping from (477, 927) to (477, 1909)
+2025-04-08 14:24:05,565 [INFO] [FRIDA] Script loaded for com.scee.psxandroid from scrape_playstation.js.
+2025-04-08 14:24:05,566 [INFO] [HOST] Waiting for PlayStation telemetry...
+2025-04-08 14:24:06,437 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:24:06,438 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:24:06,438 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:24:06,448 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:24:06,448 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:24:06,448 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:24:06,450 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:24:06,450 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:24:06,450 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:24:06,450 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:24:06,450 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:24:06,450 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:24:06,450 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:24:06,450 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:24:06,450 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:24:06,450 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:24:06,450 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:24:06,450 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:24:06,450 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:24:06,450 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:24:06,451 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:24:06,451 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:24:06,451 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:24:06,451 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:24:06,451 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:24:06,451 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:24:06,451 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:24:06,451 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:24:06,451 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:24:06,451 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:24:41,634 [INFO] [FRIDA] Xbox already running with pid 11295. Switching to foreground...
+2025-04-08 14:24:41,637 [INFO] [ADB] Bringing com.microsoft.xboxone.smartglass/com.microsoft.xbox.MainActivity to foreground
+2025-04-08 14:24:46,724 [INFO] [ADB] Swiping from (793, 935) to (793, 1829)
+2025-04-08 14:24:47,414 [INFO] [FRIDA] Script loaded for com.microsoft.xboxone.smartglass from scrape_xbox.js.
+2025-04-08 14:24:47,415 [INFO] [HOST] Waiting for Xbox telemetry...
+2025-04-08 14:24:49,075 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:24:49,075 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:24:49,075 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:24:49,078 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:24:49,078 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:24:49,078 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:24:49,082 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:24:49,083 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:24:49,083 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:24:49,091 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:24:49,092 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:24:49,092 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:24:49,096 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:24:49,096 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:24:49,096 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:24:49,096 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:24:49,096 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:24:49,096 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:24:49,096 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:24:49,096 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:24:49,096 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:24:49,096 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:24:49,096 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:24:49,096 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:24:49,096 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:24:49,096 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:24:49,096 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:24:49,096 [INFO] [HOST] Received CSV data from PlayStation
+2025-04-08 14:24:49,096 [DEBUG] process_csv_data: 0 new row(s) detected from platform PlayStation.
+2025-04-08 14:24:49,096 [INFO] [HOST] No status changes detected; nothing appended.
+2025-04-08 14:25:23,419 [INFO] [HOST] Cycle complete. Waiting 36.581020 seconds until next cycle...
