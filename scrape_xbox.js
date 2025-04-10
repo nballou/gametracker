@@ -3,8 +3,8 @@
 // An object to accumulate data per SSL connection (keyed by its pointer as string)
 var accumulators = {};
 
-if (!globalThis.processedPresenceCache) {
-    globalThis.processedPresenceCache = {};
+if (!globalThis.lastInterception) {
+    globalThis.lastInterception = {};
 }
 
 // Convert a JSON string into CSV using only the relevant telemetry columns.
@@ -12,6 +12,7 @@ function jsonToCSV(jsonStr) {
     let data;
     try {
         data = JSON.parse(jsonStr);
+        // console.log("[DEBUG] Parsed JSON data:", jsonStr);
     } catch (e) {
         return null;
     }
@@ -37,17 +38,17 @@ function jsonToCSV(jsonStr) {
     
     data.people.forEach(person => {
         const platform = "Xbox";
-        const userName = person.gamertag || "";
+        const userName = person.uniqueModernGamertag || "";
         const accountID = person.xuid || "";
         const friendCount = (person.detail && person.detail.friendCount) || "";
         const presenceState = person.presenceState || "";
         const presenceText = person.presenceText || "";
         const gamerScore = (person.gamerScore) || "";
-        const presencePlatform = "";
-        const titleId = "";
+        const presencePlatform = person.presenceDevices || "";
+        const titleId = person.presenceDetails.TitleId || "";
         const multiplayerSummary = JSON.stringify(person.multiplayerSummary) || "";
         const lastSeen = person.lastSeenDateTimeUtc || "";
-        
+
         let row = [platform, userName, accountID, presenceState, presenceText, presencePlatform, titleId, gamerScore, multiplayerSummary, lastSeen];
         row = row.map(field => `"${String(field).replace(/"/g, '""')}"`);
         csv += row.join(",") + "\n";
@@ -106,21 +107,42 @@ function processData(sslKey, data) {
     }
     var body = combined.slice(bodyOffset);
     
+    // Normalizes a JSON string by parsing it then re-stringifying with sorted keys.
+    // If parsing fails, falls back to simply trimming whitespace.
+    function normalizeJson(jsonStr) {
+        try {
+            // Parse the JSON into an object.
+            var parsed = JSON.parse(jsonStr);
+            // Re-stringify it with sorted keys.
+            return JSON.stringify(parsed, Object.keys(parsed).sort());
+        } catch(e) {
+            // If not valid JSON, at least trim extra whitespace.
+            return jsonStr.trim();
+        }
+    }
+
     function processBody(result) {
-        // Check against duplicate JSON for this cycle.
-        if (globalThis.processedPresenceCache[result]) {
+        // Normalize the result for reliable comparison.
+        var normResult = normalizeJson(result);
+        
+        // If the normalized result is identical to the last processed one, skip.
+        if (globalThis.lastInterception && globalThis.lastInterception === normResult) {
+            console.log("[DEBUG] Identical Xbox JSON received, skipping processing.");
             return;
         }
-        globalThis.processedPresenceCache[result] = true;
+        
+        // Update the global variable with the normalized version.
+        globalThis.lastInterception = normResult;
         
         var csvStr = jsonToCSV(result);
         if (csvStr) {
-            console.log("[*] Extracted JSON data and converted to CSV:");
-            console.log(csvStr);
+            console.log("[*] Extracted JSON data and converted to CSV");
             send({type: "csv-data", csv: csvStr, platform: "Xbox"});
+        } else {
+            console.log("[DEBUG] Parsed Xbox JSON did not produce valid CSV data.");
         }
     }
-    
+
     if (headers["content-encoding"] && headers["content-encoding"].toLowerCase() === "gzip") {
         Java.perform(function() {
             try {

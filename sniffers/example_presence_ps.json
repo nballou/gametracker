@@ -1,0 +1,24 @@
+{
+    "basicPresences": [
+        {
+            "accountId": "4645135650815230075",
+            "availability": "unavailable",
+            "lastAvailableDate": "2025-04-09T02:59:21.141Z",
+            "primaryPlatformInfo": {
+                "onlineStatus": "offline",
+                "platform": "MOBILE_APP",
+                "lastOnlineDate": "2025-04-09T02:59:21.141Z"
+            }
+        },
+        {
+            "accountId": "461699146552757965",
+            "availability": "unavailable",
+            "lastAvailableDate": "2025-04-08T17:03:04.143Z",
+            "primaryPlatformInfo": {
+                "onlineStatus": "offline",
+                "platform": "PS5",
+                "lastOnlineDate": "2025-04-08T17:03:04.143Z"
+            }
+        }
+    ]
+}

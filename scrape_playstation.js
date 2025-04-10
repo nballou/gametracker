@@ -43,7 +43,7 @@ function dropAvatarsFromJsonString(jsonStr) {
 function sanitizeAndDropAvatars(jsonStr) {
     // First, drop the avatars field entirely.
     let noAvatars = dropAvatarsFromJsonString(jsonStr);
-    console.log("[*] JSON string after dropping avatars:", noAvatars);
+    // console.log("[*] JSON string after dropping avatars:", noAvatars);
     // Next, normalize the string to decompose diacritics and remove combining marks.
     let normalized = noAvatars.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     
@@ -126,8 +126,8 @@ Interceptor.attach(Module.findExportByName("libssl.so", "SSL_read"), {
                         // Already processed; skip.
                     } else {
                         globalThis.processedPresenceCache[presenceJsonStr] = true;
-                        console.log("[*] Extracted JSON for presence:");
-                        console.log(presenceJsonStr);
+                        // console.log("[*] Extracted JSON for presence:");
+                        // console.log(presenceJsonStr);
                         var cleanPresenceStr = sanitizeAndDropAvatars(presenceJsonStr);
                         try {
                             var presenceObj = JSON.parse(cleanPresenceStr);
@@ -143,20 +143,20 @@ Interceptor.attach(Module.findExportByName("libssl.so", "SSL_read"), {
 
             // Process "profiles"
             if (utf8Str.indexOf("profiles") !== -1) {
-                console.log("[*] Found profiles in the string.");
                 var profileJsonStr = extractJSON(utf8Str, '{"profiles":');
                 if (profileJsonStr) {
-                    console.log("[DEBUG] Checking profiles cache for JSON:", profileJsonStr);
-                    if (globalThis.processedProfileCache[profileJsonStr]) {
-                        console.log("[DEBUG] This profile JSON was already processed, returning early.");
+                    if (globalThis.lastProfileJson && globalThis.lastProfileJson === profileJsonStr) {
+                        // console.log("[DEBUG] This profile JSON was already processed, returning early.");
+                        return;
                     } else {
+                        // Save the new JSON for future comparison.
+                        globalThis.lastProfileJson = profileJsonStr;
                         globalThis.processedProfileCache[profileJsonStr] = true;
-                        console.log("[*] Extracted JSON for profiles:");
-                        console.log(profileJsonStr);
                         try {
                             var profileObj = JSON.parse(profileJsonStr);
                             // Persist the latest profile data globally.
                             globalThis.latestProfileObj = profileObj;
+                            console.log("[*] Extracted and processed new profile JSON.");
                         } catch (e) {
                             console.error("[!] JSON parse error (profiles): " + e);
                         }
@@ -165,7 +165,7 @@ Interceptor.attach(Module.findExportByName("libssl.so", "SSL_read"), {
                     console.error("[!] Could not extract valid JSON boundaries for profiles.");
                 }
             }
-
+            
             // Check if both the latest presence and profile objects are available.
             if (globalThis.latestPresenceObj && globalThis.latestProfileObj) {
                 console.log("[*] Both JSON objects are available (from globals), merging and generating CSV.");
@@ -203,8 +203,8 @@ Interceptor.attach(Module.findExportByName("libssl.so", "SSL_read"), {
                                   multiplayerSummary + "," +
                                   lastSeen + "\n";
                     }
-                    console.log("[*] Generated CSV data:");
-                    console.log(csvStr);
+                    // console.log("[*] Generated CSV data:");
+                    // console.log(csvStr);
                     send({type: "csv-data", csv: csvStr, platform: "PlayStation"});
                 } else {
                     console.error("[!] Missing presences or profiles arrays.");

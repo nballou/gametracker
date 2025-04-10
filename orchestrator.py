@@ -15,6 +15,7 @@ import yagmail
 import threading
 import json
 import warnings
+import re
 
 yag = yagmail.SMTP("nick.ballou@gmail.com", oauth2_file="credentials.json")
 
@@ -29,8 +30,8 @@ last_status = {} # initialize the last_status dictionary
 
 # Alert check settings.
 alert_check_interval = 60 # seconds between each check.
-reopen_timeout = 600 # seconds before restarting the app if telemetry is not received.
-reboot_timeout = 900 # seconds before rebooting the device if the app is still not running.
+reopen_timeout = 300 # seconds before restarting the app if telemetry is not received.
+reboot_timeout = 450 # seconds before rebooting the device if the app is still not running.
 reboot_event = threading.Event()
 # -----------------------------------------------------------------------------
 # Logging configuration and functions
@@ -42,7 +43,7 @@ if not os.path.exists(logs_dir):
     os.makedirs(logs_dir)
 
 # Compute today's date (YYYY-MM-DD) and use it in the base filename.
-today = datetime.datetime.now().strftime("%Y-%m-%d")
+today = datetime.datetime.utcnow().strftime("%Y-%m-%d")
 base_log_filename = os.path.join(logs_dir, f"log-{today}.log")
 
 # Set up a TimedRotatingFileHandler so that the logs are rotated at midnight.
@@ -69,6 +70,7 @@ formatter = logging.Formatter(
     '%(asctime)s [%(levelname)s] %(message)s',
     datefmt='%Y-%m-%d %H:%M:%S'
 )
+formatter.converter = time.gmtime
 handler.setFormatter(formatter)
 
 # Set up the logger.
@@ -109,9 +111,9 @@ def update_last_capture(platform):
     global last_capture_time, escalation_state
 
     # If telemetry has just resumed (i.e. escalation state was non-zero) then send an email.
-    if escalation_state[platform] != 0:
+    if escalation_state[platform] == 2:
         subject = f"Telemetry Recovery - {platform}"
-        body = f"Telemetry has resumed from {platform} after a reboot/app restart."
+        body = f"Telemetry has resumed from {platform} after a reboot."
         logger.info("Telemetry resumed for %s.", platform)
         try:
             send_alert_email(subject, body)
@@ -153,12 +155,12 @@ def reboot_device(force = False):
     logger.info("[ADB] Rebooting device...")
     reboot_event.set()
     subprocess.run(["adb", "reboot"])
-    time.sleep(20)  # wait for the device to finish rebooting
+    time.sleep(40)  # wait for the device to finish rebooting
     subprocess.run(["adb", "root"])
     logger.info("[ADB] Waiting for device to come back online...")
     subprocess.run(["adb", "wait-for-device"])
     reboot_event.clear()
-    time.sleep(10)  # wait for the device to finish rebooting
+    time.sleep(30)  # wait for the device to finish rebooting
     logger.info("[ADB] Device reboot completed and event cleared.")
     reboot_frida()
 
@@ -181,11 +183,12 @@ def alert_monitor():
             elapsed = now - last_capture_time[platform]
             if escalation_state[platform] == 0 and elapsed > reopen_timeout:
                 logger.info("No telemetry from %s for %d seconds; restarting app.", platform, reopen_timeout)
-                send_alert_email(subject = f"Telemetry Alert - {platform} - App Restart", 
-                                 body = f"No telemetry received from {platform} in the expected timeframe. Action taken: App Restart.")
-                close_app(platform)
+                # send_alert_email(subject = f"Telemetry Alert - {platform} - App Restart", 
+                #                  body = f"No telemetry received from {platform} in the expected timeframe. Action taken: App Restart.")
+                package_mapping = {"PlayStation": "com.scee.psxandroid", "Xbox": "com.microsoft.xboxone.smartglass"}
+                close_app(package_mapping[platform])
                 time.sleep(1)
-                launch_app(platform)
+                launch_app(package_mapping[platform])
                 escalation_state[platform] = 1
 
             elif escalation_state[platform] == 1 and elapsed > reboot_timeout:
@@ -269,7 +272,7 @@ def process_csv_data(csv_str, platform):
     """
     global last_status
     new_rows = []
-    now = datetime.datetime.now().isoformat()
+    now = datetime.datetime.utcnow().isoformat()
     f = io.StringIO(csv_str)
     reader = csv.DictReader(f)
     debug_count = 0
@@ -279,19 +282,28 @@ def process_csv_data(csv_str, platform):
             logger.debug("Skipping row with empty unique_id: %s", row)
             continue
         key = (platform, unique_id)
-        new_status = row.get("presenceState", "")
-        old_status = last_status.get(key)
-        if key not in last_status or old_status != new_status:
-            last_status[key] = new_status
+        new_presence_state = row.get("presenceState", "")
+        new_presence_text = row.get("presenceText", "")
+        new_presence_platform = row.get("presencePlatform", "")
+        new_values = (new_presence_state, new_presence_text, new_presence_platform)
+        old_values = last_status.get(key, (None, None, None))
+        # Ignore update if only change is in the "Last seen" presenceText.
+        if (key in last_status and 
+            old_values[0] == new_presence_state and 
+            old_values[2] == new_presence_platform and 
+            old_values[1].startswith("Last seen") and 
+            new_presence_text.startswith("Last seen")):
+            continue
+        if key not in last_status or old_values != new_values:
+            last_status[key] = new_values
             row["time"] = now
             new_rows.append(row)
             debug_count += 1
-            logger.debug("Change detected for key %s: old_status=%r, new_status=%r", key, old_status, new_status)
-    logger.debug("process_csv_data: %d new row(s) detected from platform %s.", debug_count, platform)
+    logger.debug("process_csv_data: %d new status(es) detected from platform %s.", debug_count, platform)
     if new_rows:
-        update_person_csv(new_rows)
+        update_person_csv(new_rows, platform)
 
-def update_person_csv(new_rows):
+def update_person_csv(new_rows, platform):
     """Append new rows to each person's individual CSV file."""
     fieldnames = [
         "platform",
@@ -307,10 +319,10 @@ def update_person_csv(new_rows):
         "lastSeen"
     ]
     for row in new_rows:
-        account_id = row.get("accountID")
-        if not account_id:
+        userName = row.get("userName")
+        if not userName:
             continue
-        filename = os.path.join(data_dir, f"telemetry_{account_id}.csv")
+        filename = os.path.join(data_dir, f"{platform}-{userName}.csv")
         file_exists = os.path.exists(filename)
         try:
             with open(filename, "a", newline="") as f:
@@ -319,9 +331,9 @@ def update_person_csv(new_rows):
                     writer.writeheader()
                     logger.debug("Creating new file and writing header to %s.", filename)
                 writer.writerow({key: row.get(key, "") for key in fieldnames})
-            logger.info("Appended update for account %s to %s.", account_id, filename)
+            logger.info("Appended update for account %s to %s.", userName, filename)
         except Exception as e:
-            logger.info("[HOST] Error saving CSV for account %s: %s", account_id, e)
+            logger.info("[HOST] Error saving CSV for account %s: %s", userName, e)
 
 def open_friends_tab(package):
     if package == "com.scee.psxandroid":
@@ -469,5 +481,5 @@ if __name__ == "__main__":
         now = time.time()
         remainder = now % frequency  # Calculate time passed since the epoch remainder with respect to frequency
         sleep_time = frequency - remainder
-        logger.info(f"[HOST] Cycle complete. Waiting {sleep_time:0f} seconds until next cycle...")
+        logger.info(f"[HOST] Cycle complete. Waiting {sleep_time:.0f} seconds until next cycle...")
         time.sleep(sleep_time)
