@@ -1,7 +1,7 @@
 import frida
 import subprocess
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, time as dt_time, timedelta
 import sys
 import csv
 import os
@@ -17,6 +17,7 @@ import json
 import warnings
 import re
 
+# Email settings
 with open("credentials.json", "r") as cred_file:
     creds = json.load(cred_file)
 yag = yagmail.SMTP(creds["email_address"], password=creds["password"])
@@ -26,21 +27,22 @@ data_dir = "data"
 if not os.path.exists(data_dir):
     os.makedirs(data_dir)
 
-frequency = 180 # how often, in seconds, to cycle between apps
+# Configuration: digest frequency and optional first digest time of day (HH:MM in 24-hour)
+# Latter can be set to None or a string 'HH:MM'. If None, first digest is sent immediately.
 digest_interval_hours = 12 # how often to send the daily digest email
+first_digest_time = None  # e.g. '08:30' for 8:30 AM, or None for now
 
-last_status = {} # initialize the last_status dictionary
-
-# Alert check settings.
+# Scraping and alert settings.
+frequency = 180 # how often, in seconds, to cycle between apps
 alert_check_interval = 60 # seconds between each check.
 reopen_timeout = 2 * frequency + alert_check_interval  # seconds before restarting the app if telemetry is not received.
 reboot_timeout = 3 * frequency + alert_check_interval  # seconds before rebooting the device if telemetry is still not received.
 recovery_timeout = 4 * frequency + alert_check_interval   # seconds to wait *after* a reboot before sending a failure alert.
+
+# Alert-related global variables and initializations
 reboot_event = threading.Event()
-
+last_status = {} # initialize the last_status dictionary
 state_lock = threading.Lock()
-
-# Global variables to track the number of restarts and reboots.
 restart_count = 0
 reboot_count  = 0
 
@@ -125,10 +127,20 @@ alert_sent = {
     "Xbox": False
 }
 
-# Escalation state for each platform: 0 = no escalation; 1 = app restarted; 2 = device rebooted.
+# Escalation state for each platform: 0 = no escalation; 1 = app restarted; 2 = device rebooted; 3 = terminal state, alert sent.
 escalation_state = {
     "PlayStation": 0,
     "Xbox": 0
+}
+
+# near the top
+needs_restart = {
+    "PlayStation": False,
+    "Xbox":       False,
+}
+needs_reboot  = {
+    "PlayStation": False,
+    "Xbox":       False,
 }
 
 def update_last_capture(platform):
@@ -200,18 +212,36 @@ def send_daily_digest():
     restart_count = 0
     reboot_count  = 0
 
-def schedule_digest():
+def schedule_digest(first_time=None):
     """
-    Schedule the next digest to run after `digest_interval_hours`.
+    Schedule the first digest at a specific time of day, then recurring every digest_interval_hours.
+    :param first_time: datetime.time or string 'HH:MM'. If None, send immediately.
     """
-    delay = digest_interval_hours * 3600
-    logger.debug("Scheduling next digest in %d seconds", delay)
+    # Determine initial delay
+    now = datetime.now()
+    if first_time:
+        if isinstance(first_time, str):
+            hr, mn = map(int, first_time.split(':'))
+            first_time = dt_time(hour=hr, minute=mn)
+        # Build a datetime for today at the target time
+        target = datetime.combine(now.date(), first_time)
+        if target < now:
+            # schedule for tomorrow
+            target += timedelta(days=1)
+        delay = (target - now).total_seconds()
+    else:
+        delay = digest_interval_hours * 3600
+
+    logger.info(f"Scheduling first digest in {delay:.0f} seconds")
     threading.Timer(delay, _digest_runner).start()
 
+
 def _digest_runner():
-    logger.debug("_digest_runner invoked")
     send_daily_digest()
-    schedule_digest()
+    # Schedule next run after fixed interval
+    interval_seconds = digest_interval_hours * 3600
+    logger.info(f"Scheduling next digest in {interval_seconds} seconds")
+    threading.Timer(interval_seconds, _digest_runner).start()
 
 def reboot_device(force = False):
 
@@ -270,30 +300,15 @@ def alert_monitor():
 
             # 1) No escalation yet → restart app if no telemetry for reopen_timeout
             if state == 0 and elapsed > reopen_timeout:
-                logger.info("No telemetry from %s for %d seconds; restarting app.", platform, reopen_timeout)
-                # Optional alert before restart:
-                # send_alert_email(
-                #     subject=f"Telemetry Alert - {platform} - App Restart",
-                #     body=f"No telemetry received from {platform} in the expected timeframe. Action taken: App Restart."
-                # )
-                pkg = {"PlayStation": "com.scee.psxandroid", "Xbox": "com.microsoft.xboxone.smartglass"}[platform]
-                close_app(pkg)
-                time.sleep(1)
-                launch_app(pkg)
-                # Record that we’ve done one restart
+                logger.info("Marking %s for restart on next cycle", platform)
+                needs_restart[platform] = True
                 with state_lock:
                     escalation_state[platform] = 1
 
             # 2) Already restarted once → reboot device if still no telemetry by reboot_timeout
             elif state == 1 and elapsed > reboot_timeout:
-                logger.info("Still no telemetry from %s after app restart; rebooting device.", platform)
-                # Optional alert before reboot:
-                # send_alert_email(
-                #     subject=f"Telemetry Alert - {platform} - Device Reboot",
-                #     body=f"Still no telemetry received from {platform} after restart. Action taken: Device Rebooted."
-                # )
-                reboot_device(force=True)
-                # Record that we’ve done the reboot
+                logger.info("Marking %s for reboot on next cycle", platform)
+                needs_reboot[platform] = True
                 with state_lock:
                     escalation_state[platform] = 2
 
@@ -335,20 +350,41 @@ def start_frida_server():
     subprocess.run(command, shell=True)
     time.sleep(3)
 
+def wait_for_frida(timeout=30):
+    """
+    Poll until frida-server appears in the process list or until timeout.
+    Uses `pidof` which is more reliable than `ps|grep`.
+    """
+    for i in range(timeout):
+        try:
+            out = subprocess.check_output(
+                "adb shell pidof frida-server", 
+                shell=True, text=True
+            ).strip()
+            if out:
+                logger.info(f"wait_for_frida: frida-server pid={out}")
+                return True
+        except subprocess.CalledProcessError:
+            # pidof returns non-zero if not found
+            pass
+
+        # Optional: log each retry
+        logger.debug(f"wait_for_frida: attempt {i+1}/{timeout} – frida-server not yet up")
+        time.sleep(1)
+
+    return False
+
 def reboot_frida():
     """
     Reboot the frida-server on the device.
     This is useful if the server has crashed or is unresponsive.
     """
     # logger.info("[HOST] Rebooting frida-server...")
-    kill_frida_server()
     start_frida_server()
-
-def run_cycle():
-    try:
-        cycle_apps(frequency)
-    except Exception as e:
-        logger.info("[HOST] Error in cycle_apps:", e)
+    if not wait_for_frida(30):
+        logger.error("Frida-server never came up after reboot!")
+        return
+    logger.info("Frida-server is running.")
 
 def get_ui_dump():
     # Dump the UI hierarchy to the device's sdcard.
@@ -583,20 +619,41 @@ def cycle_apps(frequency = 300):
     session_store = {}
     
     # ----- Process for PlayStation app -----
+    if needs_reboot["PlayStation"]:
+        reboot_device()           # does adb reboot + frida restart
+        needs_reboot["PlayStation"] = False
+    elif needs_restart["PlayStation"]:
+        close_app(ps_package)
+        launch_app(ps_package)
+        needs_restart["PlayStation"] = False
+
     attach_frida_to_app(ps_package, ps_alias, ps_activity, "scrape_playstation.js", session_store)
     logger.info("[HOST] Waiting for PlayStation telemetry...")
     time.sleep(frequency * .3)
 
     # ----- Process for Xbox app -----
+    if needs_reboot["Xbox"]:
+        reboot_device()
+        needs_reboot["Xbox"] = False
+    elif needs_restart["Xbox"]:
+        close_app(xbox_package)
+        launch_app(xbox_package)
+        needs_restart["Xbox"] = False
     attach_frida_to_app(xbox_package, xbox_alias, xbox_activity, "scrape_xbox.js", session_store)
     logger.info("[HOST] Waiting for Xbox telemetry...")
     time.sleep(frequency * .3)
+
+def run_cycle():
+    try:
+        cycle_apps(frequency)
+    except Exception as e:
+        logger.info("[HOST] Error in cycle_apps:", e)
 
 if __name__ == "__main__":
 
     # Start the recurring digest cycle
     logger.info("Starting digest scheduler with interval %d hours", digest_interval_hours)
-    schedule_digest()
+    schedule_digest(first_digest_time)
 
     reboot_device(force = False)
     reboot_frida()
