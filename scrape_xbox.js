@@ -127,7 +127,7 @@ function processData(sslKey, data) {
         
         // If the normalized result is identical to the last processed one, skip.
         if (globalThis.lastInterception && globalThis.lastInterception === normResult) {
-            console.log("[DEBUG] Identical Xbox JSON received, skipping processing.");
+            // console.log("[DEBUG] Identical Xbox JSON received, skipping processing.");
             return;
         }
         
@@ -136,10 +136,10 @@ function processData(sslKey, data) {
         
         var csvStr = jsonToCSV(result);
         if (csvStr) {
-            console.log("[*] Extracted JSON data and converted to CSV");
+            // console.log("[*] Extracted JSON data and converted to CSV");
             send({type: "csv-data", csv: csvStr, platform: "Xbox"});
         } else {
-            console.log("[DEBUG] Parsed Xbox JSON did not produce valid CSV data.");
+            // console.log("[DEBUG] Parsed Xbox JSON did not produce valid CSV data.");
         }
     }
 

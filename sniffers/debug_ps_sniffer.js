@@ -65,65 +65,65 @@ Interceptor.attach(
                 var text = decodeUtf8(this.buf, bytesRead);
                 accumulators[this.sslPtr] = (accumulators[this.sslPtr] || '') + text;
                 var accumulated = accumulators[this.sslPtr];
-                // console.log(`[PS] Accumulator length for ptr=${this.sslPtr}: ${accumulated.length}`);
+                console.log(`[PS] Accumulator length for ptr=${this.sslPtr}: ${accumulated.length}`);
 
                 // Show raw snippets
                 if (accumulated.includes('basicPresences')) {
                     var idx = accumulated.indexOf('basicPresences');
-                    // console.log(
-                    //     '[PS][RAW PRESENCE] ...',
-                    //     accumulated.slice(Math.max(0, idx - 50), idx + 200).replace(/\n/g, ' ')
-                    // );
+                    console.log(
+                        '[PS][RAW PRESENCE] ...',
+                        accumulated.slice(Math.max(0, idx - 50), idx + 200).replace(/\n/g, ' ')
+                    );
                 }
                 if (accumulated.includes('profiles')) {
                     var idx2 = accumulated.indexOf('profiles');
-                    // console.log(
-                    //     '[PS][RAW PROFILE] ...',
-                    //     accumulated.slice(Math.max(0, idx2 - 50), idx2 + 200).replace(/\n/g, ' ')
-                    // );
+                    console.log(
+                        '[PS][RAW PROFILE] ...',
+                        accumulated.slice(Math.max(0, idx2 - 50), idx2 + 200).replace(/\n/g, ' ')
+                    );
                 }
 
                 // Presence JSON
                 var presenceObj = null;
                 if (accumulated.includes('basicPresences')) {
-                    // console.log('[PS] Found basicPresences, extracting JSON...');
+                    console.log('[PS] Found basicPresences, extracting JSON...');
                     var presStr = extractJSON(accumulated, '{"basicPresences":');
                     if (presStr) {
                         presStr = sanitizeJson(presStr);
                         try {
                             presenceObj = JSON.parse(presStr);
-                            // console.log('[PS][PARSED PRESENCE OBJ]', JSON.stringify(presenceObj, null, 2));
+                            console.log('[PS][PARSED PRESENCE OBJ]', JSON.stringify(presenceObj, null, 2));
                             globalThis.latestPresenceObj = presenceObj;
                         } catch (e) {
-                            // console.error('[PS][ERROR] JSON.parse.presence failed:', e);
+                            console.error('[PS][ERROR] JSON.parse.presence failed:', e);
                         }
                     } else {
-                        // console.error('[PS][ERROR] Could not extract basicPresences JSON');
+                        console.error('[PS][ERROR] Could not extract basicPresences JSON');
                     }
                 }
 
                 // Profile JSON
                 var profileObj = null;
                 if (accumulated.includes('profiles')) {
-                    // console.log('[PS] Found profiles, extracting JSON...');
+                    console.log('[PS] Found profiles, extracting JSON...');
                     var profStr = extractJSON(accumulated, '{"profiles":');
                     if (profStr) {
                         profStr = sanitizeJson(profStr);
                         try {
                             profileObj = JSON.parse(profStr);
-                            // console.log('[PS][PARSED PROFILE OBJ]', JSON.stringify(profileObj, null, 2));
+                            console.log('[PS][PARSED PROFILE OBJ]', JSON.stringify(profileObj, null, 2));
                             globalThis.latestProfileObj = profileObj;
                         } catch (e) {
-                            // console.error('[PS][ERROR] JSON.parse.profiles failed:', e);
+                            console.error('[PS][ERROR] JSON.parse.profiles failed:', e);
                         }
                     } else {
-                        // console.error('[PS][ERROR] Could not extract profiles JSON');
+                        console.error('[PS][ERROR] Could not extract profiles JSON');
                     }
                 }
 
                 // Merge when ready
                 if (globalThis.latestPresenceObj && globalThis.latestProfileObj) {
-                    // console.log('[*] Both JSON objects available; generating CSV...');
+                    console.log('[*] Both JSON objects available; generating CSV...');
                     var presences = globalThis.latestPresenceObj.basicPresences;
                     var profiles  = globalThis.latestProfileObj.profiles;
                     if (presences && profiles) {
@@ -144,7 +144,7 @@ Interceptor.attach(
                                 info.lastOnlineDate || ''
                             ].join(',') + '\n';
                         });
-                        // console.log('[*] Generated CSV snippet:', csv.slice(0,200).replace(/\n/g,' '));
+                        console.log('[*] Generated CSV snippet:', csv.slice(0,200).replace(/\n/g,' '));
                         send({ type: 'csv-data', csv: csv, platform: 'PlayStation' });
                     } else {
                         console.error('[!] Missing basicPresences or profiles arrays.');
@@ -158,7 +158,7 @@ Interceptor.attach(
                     globalThis.processedProfileCache = {};
                 }
             } catch (e) {
-                // console.error('[!] Error in onLeave:', e);
+                console.error('[!] Error in onLeave:', e);
             }
         }
     }

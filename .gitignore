@@ -6,3 +6,4 @@ credentials.json
 data/
 logs/
 ~$*
+test_email.py
