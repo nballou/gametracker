@@ -33,9 +33,9 @@ last_status = {} # initialize the last_status dictionary
 
 # Alert check settings.
 alert_check_interval = 60 # seconds between each check.
-reopen_timeout = 300 # seconds before restarting the app if telemetry is not received.
-reboot_timeout = 450 # seconds before rebooting the device if telemetry is still not received.
-recovery_timeout = 300  # seconds to wait *after* a reboot before sending a failure alert.
+reopen_timeout = 2 * frequency + alert_check_interval  # seconds before restarting the app if telemetry is not received.
+reboot_timeout = 3 * frequency + alert_check_interval  # seconds before rebooting the device if telemetry is still not received.
+recovery_timeout = 4 * frequency + alert_check_interval   # seconds to wait *after* a reboot before sending a failure alert.
 reboot_event = threading.Event()
 
 state_lock = threading.Lock()
