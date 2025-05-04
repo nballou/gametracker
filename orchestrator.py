@@ -554,13 +554,29 @@ def attach_frida_to_app(package_name, app_alias, activity, script_path, session_
     if running:
         try:
             process = device.get_process(app_alias)
-            pid = process.pid
-            # logger.info(f"[FRIDA] {app_alias} already running with pid {pid}. Switching to foreground...")
+            # bring app to foreground as before…
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")
                 bring_to_foreground(package_name, activity)
-            time.sleep(5)  # Allow some time for the app to come to the foreground.
-            swipe_down()
+            time.sleep(5)
+
+            # ← INSERT A 15-SECOND CHECK HERE BEFORE SWIPING ↓
+            # map your app_alias ("PS App"/"Xbox") back to the telemetry key ("PlayStation"/"Xbox")
+            if app_alias == "PS App":
+                platform = "PlayStation"
+            elif app_alias == "Xbox":
+                platform = "Xbox"
+            else:
+                platform = None
+
+            if platform is None or time.monotonic() - last_capture_time.get(platform, 0) > 15:
+                swipe_down()
+            else:
+                logger.info(
+                    "Skipping swipe_down for %s (last telemetry %.1fs ago)",
+                    platform,
+                    time.monotonic() - last_capture_time[platform]
+                )
         except frida.ProcessNotFoundError as e:
             logger.info(f"[FRIDA] Process not found: {e}")
             # Process might have disappeared; spawn if necessary.
@@ -570,8 +586,6 @@ def attach_frida_to_app(package_name, app_alias, activity, script_path, session_
         logger.info(f"[FRIDA] {package_name} not running. Spawning...")
         pid = device.spawn([package_name])
         device.resume(pid)
-        time.sleep(5) # Allow some time for the app to start.
-        # logger.info(f"[FRIDA] Spawned {package_name} with pid {pid}.")
 
     session = device.attach(pid)
     with open(script_path, "r") as f:
