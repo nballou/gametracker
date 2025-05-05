@@ -1,0 +1,51 @@
+{
+    "targets": [
+        {
+            "app_name": "com.android.settings",
+            "enabled": true,
+            "start_up_delay_ms": 0,
+            "injected_libraries": [
+              { "path": "/data/local/tmp/re.zyg.fri/libfg.so" }
+            ],
+            "child_gating": { "enabled": false }
+          },
+        {
+            "app_name" : "com.scee.psxandroid",
+            "enabled": true,
+            "start_up_delay_ms": 0,
+            "injected_libraries": [
+                {
+                    "path": "/data/local/tmp/re.zyg.fri/libfg.so"
+                }
+            ],
+            "child_gating": {
+                "enabled": false,
+                "mode": "freeze",
+                "injected_libraries" : [
+                    {
+                        "path": "/data/local/tmp/re.zyg.fri/libgadget-child.so"
+                    }
+                ]
+            }
+        },
+        {
+            "app_name" : "com.microsoft.xboxone.smartglass",
+            "enabled": true,
+            "start_up_delay_ms": 0,
+            "injected_libraries": [
+                {
+                    "path": "/data/local/tmp/re.zyg.fri/libfg.so"
+                }
+            ],
+            "child_gating": {
+                "enabled": false,
+                "mode": "freeze",
+                "injected_libraries" : [
+                    {
+                        "path": "/data/local/tmp/re.zyg.fri/libgadget-child.so"
+                    }
+                ]
+            }
+        }
+    ]
+}

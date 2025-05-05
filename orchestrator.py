@@ -34,6 +34,7 @@ first_digest_time = None  # e.g. '08:30' for 8:30 AM, or None for now
 
 # Scraping and alert settings.
 frequency = 180 # how often, in seconds, to cycle between apps
+refresh_threshold = 15  # seconds without telemetry before swipe
 alert_check_interval = 60 # seconds between each check.
 reopen_timeout = 2 * frequency + alert_check_interval  # seconds before restarting the app if telemetry is not received.
 reboot_timeout = 3 * frequency + alert_check_interval  # seconds before rebooting the device if telemetry is still not received.
@@ -45,6 +46,10 @@ last_status = {} # initialize the last_status dictionary
 state_lock = threading.Lock()
 restart_count = 0
 reboot_count  = 0
+
+# setup frida gadget
+GADGET_LOCAL_PATH  = "apks/libfg.so"
+GADGET_DEVICE_PATH = "/data/local/tmp/libfg.so"
 
 # -----------------------------------------------------------------------------
 # Logging configuration and functions
@@ -143,6 +148,36 @@ needs_reboot  = {
     "Xbox":       False,
 }
 
+# near the top, alongside your globals
+has_been_foregrounded = {
+    "PlayStation": False,
+    "Xbox":       False,
+}
+
+
+
+def on_message(message, data):
+    """Handle messages sent from the Frida script."""
+    if message["type"] == "send":
+        payload = message["payload"]
+        if payload.get("type") == "csv-data":
+            # Retrieve CSV data from the payload.
+            csv_data = payload.get("csv", "")
+            platform = payload.get("platform", "")
+            if csv_data:
+                # logger.info(f"[HOST] Received CSV data from {platform}")
+                update_last_capture(platform)
+                # Process and append new rows only if there are status changes.
+                process_csv_data(csv_data, platform)
+            else:
+                logger.info("[HOST] CSV data is empty.")
+        else:
+            logger.info("[HOST] Message from script:", payload)
+    elif message["type"] == "error":
+        logger.info("[HOST] Error message from script:", message["stack"])
+    else:
+        logger.info("[HOST] Other message:", message)
+
 def update_last_capture(platform):
     """
     Update the last capture time for the specified platform.
@@ -235,7 +270,6 @@ def schedule_digest(first_time=None):
     logger.info(f"Scheduling first digest in {delay:.0f} seconds")
     threading.Timer(delay, _digest_runner).start()
 
-
 def _digest_runner():
     send_daily_digest()
     # Schedule next run after fixed interval
@@ -243,8 +277,24 @@ def _digest_runner():
     logger.info(f"Scheduling next digest in {interval_seconds} seconds")
     threading.Timer(interval_seconds, _digest_runner).start()
 
-def reboot_device(force = False):
+def wait_for_boot(timeout=120):
+    # Wait for adb to see the device
+    subprocess.run(["adb", "wait-for-device"], check=True)
+    # Then wait for Android to fully finish booting
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        out = subprocess.check_output(
+            ["adb", "shell", "getprop", "sys.boot_completed"],
+            text=True
+        ).strip()
+        if out == '1':
+            logger.info("Device boot completed.")
+            return
+        time.sleep(1)
+    raise RuntimeError("Timed out waiting for device to boot")
 
+def reboot_device(force = False):
+    """Reboot the device using ADB."""
     if force:
         with state_lock:
             escalation_state["PlayStation"] = 2
@@ -260,18 +310,13 @@ def reboot_device(force = False):
             time.sleep(2)
             return
 
-    """Reboot the device using ADB."""
     logger.info("[ADB] Rebooting device...")
     reboot_event.set()
-    subprocess.run(["adb", "reboot"])
-    time.sleep(40)  # wait for the device to finish rebooting
-    subprocess.run(["adb", "root"])
-    logger.info("[ADB] Waiting for device to come back online...")
-    subprocess.run(["adb", "wait-for-device"])
+    subprocess.run(["adb", "reboot"], check=True)
+    wait_for_boot()
+    subprocess.run(["adb", "root"], check=True)
     reboot_event.clear()
-    time.sleep(30)  # wait for the device to finish rebooting
-    logger.info("[ADB] Device reboot completed and event cleared.")
-    reboot_frida()
+    logger.info("[ADB] Reboot complete.")
 
 def alert_monitor():
     """
@@ -327,64 +372,89 @@ def alert_monitor():
 alert_thread = threading.Thread(target=alert_monitor, daemon=True)
 alert_thread.start()
 
-def kill_frida_server():
-    try:
-        subprocess.run(["adb", "shell", "pkill", "frida-server"], check=True)
-    except subprocess.CalledProcessError as e:
-        try:
-            subprocess.run(["adb", "shell", "killall", "frida-server"], check=True)
-            # logger.debug("Successfully ran killall frida-server.")
-        except subprocess.CalledProcessError as e:
-            pass
-    time.sleep(1)
+def push_gadget():
+    """
+    Pushes the Frida-Gadget .so onto the device and makes it world-readable.
+    """
+    logger.info("Pushing Frida-Gadget to device…")
+    subprocess.run([
+        "adb", "push",
+        GADGET_LOCAL_PATH,
+        GADGET_DEVICE_PATH
+    ], check=True)
+    subprocess.run([
+        "adb", "shell", "chmod", "644", GADGET_DEVICE_PATH
+    ], check=True)
+    logger.info("Frida-Gadget is in place at %s", GADGET_DEVICE_PATH)
 
-def start_frida_server():
-    """
-    Start Frida-server on the AVD.
-    This assumes that the frida-server binary is already on the device
-    at /data/local/tmp/ and has executable permissions.
-    """
-    logger.info("[HOST] Starting frida-server on device...")
-    # Use adb shell with su to start frida-server in the background.
-    command = "adb shell nohup /data/local/tmp/frida-server > /dev/null 2>&1 &"
-    subprocess.run(command, shell=True)
-    time.sleep(3)
+# def kill_frida_server():
+#     try:
+#         subprocess.run(["adb", "shell", "pkill", "frida-server"], check=True)
+#     except subprocess.CalledProcessError as e:
+#         try:
+#             subprocess.run(["adb", "shell", "killall", "frida-server"], check=True)
+#             # logger.debug("Successfully ran killall frida-server.")
+#         except subprocess.CalledProcessError as e:
+#             pass
+#     time.sleep(1)
 
-def wait_for_frida(timeout=30):
-    """
-    Poll until frida-server appears in the process list or until timeout.
-    Uses `pidof` which is more reliable than `ps|grep`.
-    """
-    for i in range(timeout):
-        try:
-            out = subprocess.check_output(
-                "adb shell pidof frida-server", 
-                shell=True, text=True
-            ).strip()
-            if out:
-                logger.info(f"wait_for_frida: frida-server pid={out}")
-                return True
-        except subprocess.CalledProcessError:
-            # pidof returns non-zero if not found
-            pass
+# def start_frida_server():
+#     """
+#     Start Frida-server on the AVD.
+#     This assumes that the frida-server binary is already on the device
+#     at /data/local/tmp/ and has executable permissions.
+#     """
+#     logger.info("[HOST] Starting frida-server on device...")
+#     # Use adb shell with su to start frida-server in the background.
+#     command = "adb shell nohup /data/local/tmp/frida-server > /dev/null 2>&1 &"
+#     subprocess.run(command, shell=True)
+#     time.sleep(3)
 
-        # Optional: log each retry
-        logger.debug(f"wait_for_frida: attempt {i+1}/{timeout} – frida-server not yet up")
-        time.sleep(1)
+# def wait_for_frida(timeout=30):
+#     """
+#     Poll until frida-server appears in the process list or until timeout.
+#     Uses `pidof` which is more reliable than `ps|grep`.
+#     """
+#     for i in range(timeout):
+#         try:
+#             out = subprocess.check_output(
+#                 "adb shell pidof frida-server", 
+#                 shell=True, text=True
+#             ).strip()
+#             if out:
+#                 logger.info(f"wait_for_frida: frida-server pid={out}")
+#                 return True
+#         except subprocess.CalledProcessError:
+#             # pidof returns non-zero if not found
+#             pass
 
-    return False
+#         # Optional: log each retry
+#         logger.debug(f"wait_for_frida: attempt {i+1}/{timeout} – frida-server not yet up")
+#         time.sleep(1)
 
-def reboot_frida():
-    """
-    Reboot the frida-server on the device.
-    This is useful if the server has crashed or is unresponsive.
-    """
-    # logger.info("[HOST] Rebooting frida-server...")
-    start_frida_server()
-    if not wait_for_frida(30):
-        logger.error("Frida-server never came up after reboot!")
-        return
-    logger.info("Frida-server is running.")
+#     return False
+
+def enable_gadget_wrap(package):
+    # This causes every subsequent "am start" of that package
+    # to LD_PRELOAD our gadget .so.
+    wrap_prop = f"wrap.{package}"
+    preload   = f"LD_PRELOAD={GADGET_DEVICE_PATH}"
+    subprocess.run([
+        "adb", "shell", "setprop", wrap_prop, preload
+    ], check=True)
+    logger.info(f"Enabled Frida-Gadget wrap for {package}")
+
+# def reboot_frida():
+#     """
+#     Reboot the frida-server on the device.
+#     This is useful if the server has crashed or is unresponsive.
+#     """
+#     # logger.info("[HOST] Rebooting frida-server...")
+#     start_frida_server()
+#     if not wait_for_frida(30):
+#         logger.error("Frida-server never came up after reboot!")
+#         return
+#     logger.info("Frida-server is running.")
 
 def get_ui_dump():
     # Dump the UI hierarchy to the device's sdcard.
@@ -497,15 +567,30 @@ def open_friends_tab(package):
         subprocess.run(["adb", "shell", "input", "tap", "320", "2190"]) # open friends tab
         time.sleep(5)
 
-def launch_app(package):
-    """Launch an Android app via ADB using monkey command."""
-    logger.info(f"[ADB] Launching {package} using monkey command")
-    subprocess.run(
-        ["adb", "shell", "monkey", "-p", package, "-c", "android.intent.category.LAUNCHER", "1"],
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL
+def launch_app(package, activity, timeout=10):
+    """
+    Launch the app with Frida-Gadget preloaded by using `sh -c` on the device.
+    """
+    # Build a shell command string for the device
+    remote_cmd = (
+        f"LD_PRELOAD={GADGET_DEVICE_PATH} "
+        f"am start -n {package}/{activity}"
     )
-    time.sleep(5)
+    # Now wrap it with sh -c so it’ll parse the env var correctly
+    cmd = [
+        "adb", "shell",
+        "sh", "-c",
+        f"\"{remote_cmd}\""
+    ]
+    logger.info(f"[ADB] Launching {package} via sh -c with gadget (timeout={timeout}s)…")
+    try:
+        # shell=False here, passing the list directly
+        subprocess.run(cmd, check=True, timeout=timeout)
+    except subprocess.TimeoutExpired:
+        logger.warning(f"[ADB] launch_app timed out after {timeout}s")
+    except subprocess.CalledProcessError as e:
+        logger.error(f"[ADB] launch_app failed: {e}")
+
     open_friends_tab(package)
 
 def close_app(package):
@@ -516,7 +601,6 @@ def close_app(package):
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL
     )
-    time.sleep(5)
 
 def bring_to_foreground(package, activity):
     """Bring the app to the foreground using ADB."""
@@ -530,6 +614,54 @@ def bring_to_foreground(package, activity):
     else: 
         open_friends_tab(package)
 
+def prepare_app_for_scrape(platform_info):
+    """
+    1) Handle restart/reboot flags
+    2) Bring app to foreground (or launch it)
+    3) Swipe to refresh, but only after the first successful foreground
+       and only if telemetry is stale.
+    """
+    name     = platform_info["name"]
+    pkg      = platform_info["package"]
+    activity = platform_info["activity"]
+
+    # 1) Escalation: reboot or restart if flagged
+    if needs_reboot[name]:
+        reboot_device()
+        needs_reboot[name] = False
+    elif needs_restart[name]:
+        close_app(pkg)
+        launch_app(pkg, activity)
+        needs_restart[name] = False
+
+    # 2) launch / foreground with gadget prepended
+    logger.info(f"[HOST] Launching {name} with Frida-Gadget preload…")
+    cmd = (
+        f"adb shell env LD_PRELOAD={GADGET_DEVICE_PATH} "
+        f"am start -n {pkg}/{activity}"
+    )
+    subprocess.run(cmd, shell=True, check=True)
+    time.sleep(5)  # let the UI settle
+
+    # 3) Swipe logic
+    if not has_been_foregrounded[name]:
+        # very first time — no swipe
+        logger.info(f"[HOST] First foreground of {name}; skipping swipe.")
+        has_been_foregrounded[name] = True
+    else:
+        # after first time, only swipe if >15s since last telemetry
+        elapsed = time.monotonic() - last_capture_time.get(name, 0)
+        if elapsed > refresh_threshold:
+            logger.info(
+                f"[HOST] No new {name} telemetry for {elapsed:.1f}s → swiping to refresh"
+            )
+            swipe_down()
+        else:
+            logger.info(
+                f"[HOST] {name} telemetry is fresh ({elapsed:.1f}s ago) → skip swipe"
+            )
+
+
 def swipe_down():
     """Perform a vertical swipe from a random position within the specified rectangle."""
     start_x = random.randint(150, 900)
@@ -537,6 +669,20 @@ def swipe_down():
     end_y = random.randint(1800, 2000)  # Ensure the swipe ends no lower than Y = 1800
     # logger.info(f"[ADB] Swiping from ({start_x}, {start_y}) to ({start_x}, {end_y})")
     subprocess.run(["adb", "shell", "input", "swipe", str(start_x), str(start_y), str(start_x), str(end_y)])
+
+def swipe_if_stale(name):
+    if not has_been_foregrounded[name]:
+        logger.info(f"[HOST] First foreground of {name}; skipping swipe.")
+        has_been_foregrounded[name] = True
+        return
+
+    elapsed = time.monotonic() - last_capture_time.get(name, 0)
+    if elapsed > REFRESH_THRESHOLD:
+        logger.info(f"[HOST] No new {name} telemetry for {elapsed:.1f}s → swiping")
+        swipe_down()
+    else:
+        logger.info(f"[HOST] {name} telemetry is fresh ({elapsed:.1f}s ago) → skip swipe")
+
 
 def is_app_running(device, app_alias):
     """Check if the app process is already running."""
@@ -546,116 +692,194 @@ def is_app_running(device, app_alias):
             return True
     return False
 
-def attach_frida_to_app(package_name, app_alias, activity, script_path, session_store):
-    """Attach Frida to the app process (spawn if needed) and load the provided script."""
+def ensure_app_running(platform_info):
+    """
+    1) If flagged for full reboot, do that (and reset first-foreground logic).
+    2) If flagged for soft restart, close & launch (and reset first-foreground).
+    3) If already running and no flags, just foreground it.
+    4) If not running at all, launch it.
+    """
+    name     = platform_info["name"]
+    pkg      = platform_info["package"]
+    alias    = platform_info["alias"]    # e.g. "PS App", but we'll use pkg for process checks
+    activity = platform_info["activity"]
+
     device = frida.get_usb_device(timeout=5)
-    running = is_app_running(device, app_alias)
+
+    # 1) Full device reboot pending?
+    if needs_reboot[name]:
+        reboot_device()
+        needs_reboot[name] = False
+        has_been_foregrounded[name] = False
+
+    # 2) App-level restart pending?
+    if needs_restart[name]:
+        logger.info(f"[HOST] Restarting {name}…")
+        close_app(pkg)
+        launch_app(pkg, activity)
+        needs_restart[name] = False
+        has_been_foregrounded[name] = False
+        return
+
+    # 3) Is the process already up?
+    if is_app_running(device, pkg):
+        # Already running → just bring it forward
+        logger.info(f"[HOST] Bringing {name} to foreground…")
+        bring_to_foreground(pkg, activity)
+    else:
+        # Not running → fresh launch
+        logger.info(f"[HOST] Launching {name} from scratch…")
+        launch_app(pkg, activity)
+        has_been_foregrounded[name] = False  # ensure swipe-skip on first launch
+
+
+# def attach_frida_to_app(package_name, app_alias, activity, script_path, session_store):
+    # """Attach Frida to the app process (spawn if needed) and load the provided script."""
+    # device = frida.get_usb_device(timeout=5)
+    # running = is_app_running(device, app_alias)
     
-    if running:
-        try:
-            process = device.get_process(app_alias)
-            # bring app to foreground as before…
-            with warnings.catch_warnings():
-                warnings.simplefilter("ignore")
-                bring_to_foreground(package_name, activity)
-            time.sleep(5)
+    # if running:
+    #     try:
+    #         process = device.get_process(app_alias)
+    #         # bring app to foreground as before…
+    #         with warnings.catch_warnings():
+    #             warnings.simplefilter("ignore")
+    #             bring_to_foreground(package_name, activity)
+    #         time.sleep(5)
 
-            # ← INSERT A 15-SECOND CHECK HERE BEFORE SWIPING ↓
-            # map your app_alias ("PS App"/"Xbox") back to the telemetry key ("PlayStation"/"Xbox")
-            if app_alias == "PS App":
-                platform = "PlayStation"
-            elif app_alias == "Xbox":
-                platform = "Xbox"
-            else:
-                platform = None
+    #         # ← INSERT A 15-SECOND CHECK HERE BEFORE SWIPING ↓
+    #         # map your app_alias ("PS App"/"Xbox") back to the telemetry key ("PlayStation"/"Xbox")
+    #         if app_alias == "PS App":
+    #             platform = "PlayStation"
+    #         elif app_alias == "Xbox":
+    #             platform = "Xbox"
+    #         else:
+    #             platform = None
 
-            if platform is None or time.monotonic() - last_capture_time.get(platform, 0) > 15:
-                swipe_down()
-            else:
-                logger.info(
-                    "Skipping swipe_down for %s (last telemetry %.1fs ago)",
-                    platform,
-                    time.monotonic() - last_capture_time[platform]
-                )
-        except frida.ProcessNotFoundError as e:
-            logger.info(f"[FRIDA] Process not found: {e}")
-            # Process might have disappeared; spawn if necessary.
-            running = False
+    #         if platform is None or time.monotonic() - last_capture_time.get(platform, 0) > 15:
+    #             swipe_down()
+    #         else:
+    #             logger.info(
+    #                 "Skipping swipe_down for %s (last telemetry %.1fs ago)",
+    #                 platform,
+    #                 time.monotonic() - last_capture_time[platform]
+    #             )
+    #     except frida.ProcessNotFoundError as e:
+    #         logger.info(f"[FRIDA] Process not found: {e}")
+    #         # Process might have disappeared; spawn if necessary.
+    #         running = False
 
-    if not running:
-        logger.info(f"[FRIDA] {package_name} not running. Spawning...")
-        pid = device.spawn([package_name])
-        device.resume(pid)
+    # if not running:
+    #     logger.info(f"[FRIDA] {package_name} not running. Spawning...")
+    #     pid = device.spawn([package_name])
+    #     device.resume(pid)
 
-    session = device.attach(pid)
-    with open(script_path, "r") as f:
-        script_source = f.read()
-    script = session.create_script(script_source)
-    script.on("message", on_message)
-    script.load()
-    session_store[app_alias] = session
+    # session = device.attach(pid)
+    # with open(script_path, "r") as f:
+    #     script_source = f.read()
+    # script = session.create_script(script_source)
+    # script.on("message", on_message)
+    # script.load()
+    # session_store[app_alias] = session
     # logger.info(f"[FRIDA] Script loaded for {package_name} from {script_path}.")
 
-def on_message(message, data):
-    """Handle messages sent from the Frida script."""
-    if message["type"] == "send":
-        payload = message["payload"]
-        if payload.get("type") == "csv-data":
-            # Retrieve CSV data from the payload.
-            csv_data = payload.get("csv", "")
-            platform = payload.get("platform", "")
-            if csv_data:
-                # logger.info(f"[HOST] Received CSV data from {platform}")
-                update_last_capture(platform)
-                # Process and append new rows only if there are status changes.
-                process_csv_data(csv_data, platform)
-            else:
-                logger.info("[HOST] CSV data is empty.")
-        else:
-            logger.info("[HOST] Message from script:", payload)
-    elif message["type"] == "error":
-        logger.info("[HOST] Error message from script:", message["stack"])
+def attach_via_gadget(package_name, script_path, session_store, alias, attach_timeout=30):
+    """
+    Attach to a running app (with Frida-Gadget preloaded) by polling
+    until the process shows up, then load your Frida script.
+    """
+    device = frida.get_usb_device(timeout=5)
+    deadline = time.monotonic() + attach_timeout
+    pid = None
+
+    # 1) Poll until the process exists (or timeout)
+    while time.monotonic() < deadline:
+        try:
+            proc = device.get_process(package_name)
+            pid = proc.pid
+            break
+        except frida.ProcessNotFoundError:
+            logger.debug(f"[FRIDA] {package_name} not yet running; retrying in 1s…")
+            time.sleep(1)
+
+    if pid is None:
+        logger.error(f"[FRIDA] Failed to find process '{package_name}' after {attach_timeout}s. Skipping attach.")
+        return
+
+    # 2) Attach and load the script
+    session = device.attach(pid)
+    with open(script_path, "r") as f:
+        source = f.read()
+
+    script = session.create_script(source)
+    script.on("message", on_message)
+    script.load()
+
+    session_store[alias] = session
+    logger.info(f"[FRIDA GADGET] Attached to {package_name} (pid={pid}) and loaded '{alias}'.")
+
+
+def scrape_with_frida(platform_info, session_store, frequency):
+    """
+    Attach to the app via Frida-Gadget and then wait (up to a limit)
+    for the next telemetry update, polling last_capture_time.
+    """
+    pkg    = platform_info["package"]
+    alias  = platform_info["alias"]
+    name   = platform_info["name"]
+    script = platform_info["script"]
+
+    # 1) Record the timestamp before attaching
+    before_ts = last_capture_time.get(name, 0)
+
+    # 2) Attach and inject your scrape script
+    attach_via_gadget(pkg, script, session_store, alias)
+
+    # 3) Poll for new telemetry until timeout = frequency * 0.3
+    timeout   = frequency * 0.3
+    deadline  = time.monotonic() + timeout
+    logger.info(f"[HOST] Waiting up to {timeout:.1f}s for {name} telemetry…")
+
+    while time.monotonic() < deadline:
+        # If last_capture_time has moved past before_ts, we got data
+        if last_capture_time.get(name, 0) > before_ts:
+            elapsed = time.monotonic() - before_ts
+            logger.info(f"[HOST] Received {name} telemetry after {elapsed:.1f}s")
+            break
+        time.sleep(0.5)
     else:
-        logger.info("[HOST] Other message:", message)
+        # timeout expired
+        logger.warning(
+            "[HOST] No %s telemetry within %.1f seconds (proceeding)",
+            name, timeout
+        )
 
-def cycle_apps(frequency = 300):
-    """Cycle between launching PlayStation and Xbox apps, attach Frida scripts, and collect CSV data."""
-    # Define package names and main activities.
-    ps_package = "com.scee.psxandroid"
-    ps_alias = "PS App"
-    ps_activity = "com.scee.psxandroid.activity.TopActivity"
 
-    xbox_package = "com.microsoft.xboxone.smartglass"
-    xbox_alias = "Xbox"
-    xbox_activity = "com.microsoft.xbox.MainActivity"
-    
-    # A dictionary to hold Frida sessions.
-    session_store = {}
-    
-    # ----- Process for PlayStation app -----
-    if needs_reboot["PlayStation"]:
-        reboot_device()           # does adb reboot + frida restart
-        needs_reboot["PlayStation"] = False
-    elif needs_restart["PlayStation"]:
-        close_app(ps_package)
-        launch_app(ps_package)
-        needs_restart["PlayStation"] = False
+def cycle_apps(frequency=300):
+    platforms = [
+        { "name":"PlayStation", "package":"com.scee.psxandroid",
+          "alias":"PS App", "activity":"com.scee.psxandroid.activity.TopActivity",
+          "script":"scrape_playstation.js" },
+        { "name":"Xbox",       "package":"com.microsoft.xboxone.smartglass",
+          "alias":"Xbox",    "activity":"com.microsoft.xbox.MainActivity",
+          "script":"scrape_xbox.js" },
+    ]
 
-    attach_frida_to_app(ps_package, ps_alias, ps_activity, "scrape_playstation.js", session_store)
-    logger.info("[HOST] Waiting for PlayStation telemetry...")
-    time.sleep(frequency * .3)
+    global session_store
+    try:
+        session_store
+    except NameError:
+        session_store = {}
 
-    # ----- Process for Xbox app -----
-    if needs_reboot["Xbox"]:
-        reboot_device()
-        needs_reboot["Xbox"] = False
-    elif needs_restart["Xbox"]:
-        close_app(xbox_package)
-        launch_app(xbox_package)
-        needs_restart["Xbox"] = False
-    attach_frida_to_app(xbox_package, xbox_alias, xbox_activity, "scrape_xbox.js", session_store)
-    logger.info("[HOST] Waiting for Xbox telemetry...")
-    time.sleep(frequency * .3)
+    for plat in platforms:
+        ensure_app_running(plat)
+
+        # swipe if needed (using has_been_foregrounded & last_capture_time)…
+        swipe_if_stale(plat["name"])
+
+        # now attach & scrape
+        scrape_with_frida(plat, session_store, frequency)
+
 
 def run_cycle():
     try:
@@ -664,28 +888,27 @@ def run_cycle():
         logger.info("[HOST] Error in cycle_apps:", e)
 
 if __name__ == "__main__":
-
-    # Start the recurring digest cycle
-    logger.info("Starting digest scheduler with interval %d hours", digest_interval_hours)
+    # 1) Start the daily digest scheduler
+    logger.info("Starting digest scheduler (%d-hour interval)…", digest_interval_hours)
     schedule_digest(first_digest_time)
 
-    reboot_device(force = False)
-    reboot_frida()
-    # Check if adb is already in root mode
+    # 2) Push the gadget and enable the LD_PRELOAD wrap
+    push_gadget()
 
-    logger.info("[HOST] Starting telemetry collection workflow...")
+    # 3) Reboot once (so the gadget is preloaded by zygote)
+    reboot_device(force=False)
+
+    logger.info("[HOST] Entering telemetry collection loop…")
     while True:
-
-        # If a reboot is in progress, wait until it's done.
         if reboot_event.is_set():
-            logger.info("Device is rebooting. Pausing cycle_apps until reboot is complete...")
-            time.sleep(30)  # adjust the sleep duration as appropriate
-            continue  # Skip this iteration of the loop until reboot_event is cleared.
+            time.sleep(30)
+            continue
 
-        start_time = time.monotonic()
+        # 4) Run one full scrape cycle (UI prep + Frida attach)
         run_cycle()
+
+        # 5) Sleep until the next aligned interval
         now = time.monotonic()
-        remainder = now % frequency  # Calculate time passed since the epoch remainder with respect to frequency
-        sleep_time = frequency - remainder
-        logger.info(f"[HOST] Cycle complete. Waiting {sleep_time:.0f} seconds until next cycle...")
+        sleep_time = frequency - (now % frequency)
+        logger.info(f"[HOST] Cycle complete. Sleeping {sleep_time:.0f}s until next run…")
         time.sleep(sleep_time)
