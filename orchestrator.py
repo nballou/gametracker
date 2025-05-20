@@ -235,7 +235,6 @@ def schedule_digest(first_time=None):
     logger.info(f"Scheduling first digest in {delay:.0f} seconds")
     threading.Timer(delay, _digest_runner).start()
 
-
 def _digest_runner():
     send_daily_digest()
     # Schedule next run after fixed interval
