@@ -6,7 +6,7 @@ import threading
 import asyncio
 import yagmail
 
-from datetime import datetime
+from datetime import datetime, timedelta, time as dt_time
 from logging import getLogger, Formatter, StreamHandler
 from logging.handlers import TimedRotatingFileHandler
 from dotenv import load_dotenv
@@ -34,6 +34,7 @@ XBOX_CLIENT_ID     = os.environ["XBOX_CLIENT_ID"]
 XBOX_CLIENT_SECRET = os.environ["XBOX_SECRET_VALUE"]
 XBOX_REDIRECT_URI  = os.environ.get("XBOX_REDIRECT_URI", "http://localhost/auth/callback")
 
+daily_errors = {"PlayStation": [], "Xbox": []}
 
 # Build Xbox WebAPI client
 def init_xbox_client():
@@ -86,6 +87,7 @@ last_capture_time  = {"PlayStation":time.monotonic(), "Xbox":time.monotonic()}
 escalation_state   = {"PlayStation":0,          "Xbox":0}
 psn_last_status    = {}
 xbox_last_status   = {}
+last_status = {}  # maps (platform, accountID) → (state, text, platform)
 
 # ----------------------------------------------------------------------------
 # Logging setup
@@ -103,6 +105,82 @@ def send_email(subject, body):
     logger.info(f"Sending email: {subject}")
     try: yag.send(to=EMAIL_USER, subject=subject, contents=body)
     except Exception as e: logger.error(f"Email failed: {e}")
+
+
+def send_daily_digest():
+    """
+    Collect stats for the past 24h and email them, including any errors.
+    """
+    cutoff = datetime.utcnow() - timedelta(days=1)
+    logger.info("Digest cutoff time: %s", cutoff.isoformat())
+
+    platforms    = ["PlayStation", "Xbox"]
+    unique_users = {p: set() for p in platforms}
+    updates      = {p: 0   for p in platforms}
+
+    # Count rows & unique users in each <platform>-<user>.csv
+    for fname in os.listdir(data_dir):
+        if not fname.endswith(".csv"):
+            continue
+        platform = fname.split("-", 1)[0]
+        if platform not in platforms:
+            continue
+        path = os.path.join(data_dir, fname)
+        with open(path) as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                ts = datetime.fromisoformat(row["time"])
+                if ts >= cutoff:
+                    unique_users[platform].add(row["userName"])
+                    updates[platform] += 1
+
+    # Build email body
+    lines = [f"Daily Telemetry Digest ({datetime.utcnow().date()} UTC)\n"]
+    for p in platforms:
+        lines.append(f"{p}: {len(unique_users[p])} unique users, {updates[p]} updates")
+    lines.append("")  # blank line
+
+    # Append any errors from the last 24h
+    for p in platforms:
+        errs = daily_errors.get(p, [])
+        if errs:
+            lines.append(f"{p} errors:")
+            for e in errs:
+                lines.append(f"- {e}")
+            lines.append("")
+
+    subject = "Daily Telemetry Digest"
+    body    = "\n".join(lines)
+    logger.info("Sending daily digest email with subject: %s", subject)
+    try:
+        yag.send(subject=subject, contents=body)
+        logger.info("Daily digest email sent successfully.")
+    except Exception as e:
+        logger.error("Failed to send daily digest email: %s", e)
+
+    # Reset error log for next day
+    for p in platforms:
+        daily_errors[p].clear()
+
+def schedule_digest(first_time="09:00"):
+    """
+    Schedule the first digest at a specific time of day (UTC), then every 24h.
+    :param first_time: string 'HH:MM' in UTC
+    """
+    now = datetime.utcnow()
+    hr, mn = map(int, first_time.split(":"))
+    first_dt = datetime.combine(now.date(), dt_time(hour=hr, minute=mn))
+    if first_dt < now:
+        first_dt += timedelta(days=1)
+    delay = (first_dt - now).total_seconds()
+
+    logger.info(f"Scheduling first daily digest in {delay:.0f} seconds (at {first_dt.isoformat()} UTC)")
+    threading.Timer(delay, _digest_runner).start()
+
+def _digest_runner():
+    send_daily_digest()
+    # schedule the next one in exactly 24h
+    threading.Timer(24*3600, _digest_runner).start()
 
 # ----------------------------------------------------------------------------
 # CSV persistence
@@ -157,6 +235,8 @@ def fetch_playstation():
             if p.get("accountId")
         }
         batch_success = True
+        last_capture_time["PlayStation"] = time.monotonic()
+        
     except Exception as e:
         logger.error(f"[PSN] Batch presences call failed: {e}")
         all_presences = {}
@@ -178,6 +258,7 @@ def fetch_playstation():
                              .get_presence()
                 pres = raw.get("basicPresence", raw)
                 logger.debug(f"[PSN] Using per-friend get_presence for {aid}: {pres!r}")
+                time.sleep(1)  # throttle between per-friend profile calls
             except Exception as e:
                 logger.error(f"[PSN] Per-friend get_presence failed for {aid}: {e}")
                 pres = {}
@@ -250,90 +331,142 @@ def fetch_playstation():
             psn_last_status[friend.online_id] = row["presenceState"]
             rows.append(row)
 
-        time.sleep(1)  # throttle between per-friend profile calls
-
     # 5) Persist changes
     if rows:
         logger.debug(f"[PSN] Writing {len(rows)} rows to CSV")
         update_person_csv(rows, "PlayStation")
-        last_capture_time["PlayStation"] = time.monotonic()
 
 
 # ----------------------------------------------------------------------------
 # Xbox-WebAPI integration (async)
 # ----------------------------------------------------------------------------
-async def fetch_xbox():
-    logger.debug("[Xbox] Entering fetch_xbox()")
-
-    # 1) Retrieve friends list
+async def get_friends_data():
+    """
+    Fetch Xbox friends and build mapping dictionaries,
+    including rich presence text & multiplayer info.
+    """
     raw_response = await xbl_client.people.get_friends_own()
-    # print(f"[Xbox] raw_response: {raw_response}")
-
-    # Unpack tuple if returned
     data = raw_response[1] if isinstance(raw_response, tuple) and len(raw_response) > 1 else raw_response
-    # Extract list of friends
-    friends = getattr(data, 'people', data)
+    friends = getattr(data, "people", data)
 
-    # 2) Build XUIDs and mapping, plus gamerScore & lastSeen from friend data
     xuids = []
     gtmap = {}
     score_map = {}
     last_map = {}
+
+    # NEW maps for the rich fields
+    text_map     = {}
+    platform_map = {}
+    title_map    = {}
+    multi_map    = {}
+
     for f in friends:
-        xuid = getattr(f, 'xuid', None) or getattr(f, 'userId', None)
-        gamertag = getattr(f, 'gamertag', None)
-        # friend-level stats
-        score = getattr(f, 'gamer_score', None) or getattr(f, 'gamerScore', None) or getattr(f, 'gamer_score', None)
-        last_seen_friend = getattr(f, 'last_seen_date_time_utc', None) or getattr(f, 'lastSeenDateTimeUtc', None)
-        if isinstance(last_seen_friend, datetime):
-            last_seen_friend = last_seen_friend.isoformat()
-
+        xuid = getattr(f, "xuid", None) or getattr(f, "userId", None)
         xuids.append(xuid)
-        gtmap[xuid] = gamertag
-        score_map[xuid] = score or ''
-        last_map[xuid] = last_seen_friend or ''
 
-    # 3) Batch-presence query
+        # basic maps
+        gtmap[xuid]    = getattr(f, "gamertag", None) or getattr(f, "display_name", "")
+        score_map[xuid]= str(getattr(f, "gamer_score", None) or getattr(f, "gamerScore", "") or "")
+        last_dt = getattr(f, "last_seen_date_time_utc", None) or getattr(f, "lastSeenDateTimeUtc", None)
+        last_map[xuid] = last_dt.isoformat() if isinstance(last_dt, datetime) else (last_dt or "")
+
+        # --- pull the rich presence info off Person f ---
+        # presence text
+        text_map[xuid] = getattr(f, "presence_text", "") or ""
+        # platform/device
+        platform_map[xuid] = getattr(f, "presence_devices", None) or ""
+        # title they were in (first detail if present)
+        details = getattr(f, "presence_details", None) or []
+        title_map[xuid] = (getattr(details[0], "title_id", "") if details else "") or ""
+        # multiplayer summary
+        msum = getattr(f, "multiplayer_summary", None)
+        if msum:
+            multi_map[xuid] = f"in_party={msum.in_party},in_multiplayer={msum.in_multiplayer_session}"
+        else:
+            multi_map[xuid] = ""
+
+    return xuids, gtmap, score_map, last_map, text_map, platform_map, title_map, multi_map
+
+def process_presence(pres_list, gtmap, score_map, last_map,
+                     text_map, platform_map, title_map, multi_map,
+                     check_time):
+    """
+    Process each presence entry into a CSV row, change‐detecting on full
+    (state, text, platform) but ignoring updates where ONLY the
+    presenceText moved from one 'Last seen...' to another.
+    """
+    rows = []
+    for p in pres_list:
+        xuid = getattr(p, "xuid", None) or getattr(p, "userId", None)
+        key = ("Xbox", xuid)
+        user = gtmap.get(xuid, "<unknown>")
+
+        # 1) Extract the three tracked values
+        state = getattr(p, "state", None) or ""
+        text = text_map.get(xuid, "") or ""
+        platform = platform_map.get(xuid, "") or ""
+
+        new_vals = (state, text, platform)
+        old_vals = last_status.get(key)
+
+        # 2) If we’ve seen this user before and the only change is in
+        #    presenceText AND both old/new start with “Last seen”, skip it.
+        if old_vals is not None:
+            same_state    = old_vals[0] == state
+            same_platform = old_vals[2] == platform
+            both_last_seen = old_vals[1].startswith("Last seen") and text.startswith("Last seen")
+            if same_state and same_platform and both_last_seen:
+                logger.debug(f"[Xbox:{xuid}] Skipping only-last-seen update")
+                continue
+
+        # 3) If anything changed, record and emit
+        if old_vals is None or old_vals != new_vals:
+            last_status[key] = new_vals
+
+            rows.append({
+                "platform":           "Xbox",
+                "time":               check_time,
+                "userName":           user,
+                "accountID":          xuid,
+                "presenceState":      state,
+                "presenceText":       text,
+                "presencePlatform":   platform,
+                "titleId":            title_map.get(xuid, ""),
+                "gamerScore":         score_map.get(xuid, ""),
+                "multiplayerSummary": multi_map.get(xuid, ""),
+                "lastSeen":           last_map.get(xuid, "")
+            })
+
+    return rows
+
+async def fetch_xbox():
+    logger.debug("[Xbox] Entering fetch_xbox()")
+
+    # 1) Grab everything, including rich maps
+    xuids, gtmap, score_map, last_map, \
+    text_map, platform_map, title_map, multi_map = await get_friends_data()
+
+    # 2) Batch-presence
     try:
         pres_list = await xbl_client.presence.get_presence_batch(xuids)
-        logger.debug("[Xbox] Received presence list of length {len(pres_list)}")
+        logger.debug(f"[Xbox] Received presence list of length {len(pres_list)}")
+        last_capture_time["Xbox"] = time.monotonic()
     except Exception as e:
         logger.error(f"[Xbox] Error in get_presence_batch: {e}")
         return
 
-    # 4) Process each presence
-    rows = []
+    # 3) Process & write
     check_time = datetime.utcnow().isoformat()
-    for idx, p in enumerate(pres_list):
+    rows = process_presence(
+        pres_list,
+        gtmap, score_map, last_map,
+        text_map, platform_map, title_map, multi_map,
+        check_time
+    )
 
-        xuid = getattr(p, 'xuid', None) or getattr(p, 'userId', None)
-        user = gtmap.get(xuid, '<unknown>')
-        state = getattr(p, 'state', None) or getattr(p, 'presenceState', None)
-        last = getattr(p, 'lastSeen', None) or ''
-
-        prev = xbox_last_status.get(xuid)
-        if state != prev:
-            # logger.debug(f"[Xbox] State changed for {xuid}: {prev} -> {state}")
-            xbox_last_status[xuid] = state
-            rows.append({
-                "platform": "Xbox",
-                "time": check_time,
-                "userName": user,
-                "accountID": xuid,
-                "presenceState": state,
-                "presenceText": "",
-                "presencePlatform": "",
-                "titleId": "",
-                "gamerScore": score_map.get(xuid, ''),
-                "multiplayerSummary": "",
-                "lastSeen": last_map.get(xuid, '')
-            })
-
-    # 5) Write CSV if needed
     if rows:
         logger.debug(f"[Xbox] Writing {len(rows)} rows to CSV")
         update_person_csv(rows, "Xbox")
-        last_capture_time["Xbox"] = time.monotonic()
     else:
         logger.debug("[Xbox] No rows to write")
 
@@ -363,11 +496,13 @@ def api_key_warning_runner():
 if __name__=="__main__":
     threading.Thread(target=alert_monitor,daemon=True).start()
     threading.Timer(API_KEY_WARN_DELAY,api_key_warning_runner).start()
+
+    schedule_digest("09:00")
     logger.info("Starting polling…")
     while True:
         try:
-            fetch_playstation()
-            time.sleep(2)
+            # fetch_playstation()
+            # time.sleep(2)
             fetch_xbox_telemetry()
         except Exception as e:
             logger.error(f"Error: {e}")
