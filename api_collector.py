@@ -374,7 +374,6 @@ def process_presence(pres_list, gtmap, score_map, last_map,
             same_platform = old_vals[2] == platform
             both_last_seen = old_vals[1].startswith("Last seen") and text.startswith("Last seen")
             if same_state and same_platform and both_last_seen:
-                logger.debug(f"[Xbox:{xuid}] Skipping only-last-seen update")
                 continue
 
         # 3) If anything changed, record and emit
