@@ -293,7 +293,7 @@ def fetch_playstation():
         basic         = pres.get("basicPresence", pres)
         info          = basic.get("primaryPlatformInfo", {})
         console_state = info.get("onlineStatus", "") or ""
-        console_last  = info.get("lastOnlineDate", "") or ""
+        console_last  = basic.get("lastAvailableDate", "") or ""
         console_avail = basic.get("availability", "") or ""
 
         # mobile fallback
@@ -501,8 +501,8 @@ if __name__=="__main__":
     logger.info("Starting polling…")
     while True:
         try:
-            # fetch_playstation()
-            # time.sleep(2)
+            fetch_playstation()
+            time.sleep(2)
             fetch_xbox_telemetry()
         except Exception as e:
             logger.error(f"Error: {e}")
