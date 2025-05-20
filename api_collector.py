@@ -85,7 +85,8 @@ POLL_INTERVAL      = 300         # 5 min
 API_KEY_WARN_DELAY = 3*7*24*3600 # 3 weeks
 last_capture_time  = {"PlayStation":time.monotonic(), "Xbox":time.monotonic()}
 escalation_state   = {"PlayStation":0,          "Xbox":0}
-psn_last_status    = {}
+psn_last_status   = {}   # accountId -> last presenceState
+psn_last_trophies = {}   # accountId -> last trophy JSON string
 xbox_last_status   = {}
 last_status = {}  # maps (platform, accountID) → (state, text, platform)
 
@@ -174,7 +175,7 @@ def schedule_digest(first_time="09:00"):
         first_dt += timedelta(days=1)
     delay = (first_dt - now).total_seconds()
 
-    logger.info(f"Scheduling first daily digest in {delay:.0f} seconds (at {first_dt.isoformat()} UTC)")
+    logger.info(f"Scheduling first daily digest at {first_dt.isoformat()} UTC)")
     threading.Timer(delay, _digest_runner).start()
 
 def _digest_runner():
@@ -200,99 +201,92 @@ def update_person_csv(rows, platform):
 # ----------------------------------------------------------------------------
 def fetch_playstation():
     logger.debug("[PSN] Entering fetch_playstation()")
-
-    # 1) Get friends and their account IDs
-    friends = list(psn_client.friends_list())
+    friends     = list(psn_client.friends_list())
     account_ids = [f.account_id for f in friends]
-    logger.debug(f"[PSN] Friend account IDs: {account_ids}")
 
-    # 2) Batch-fetch presences
-    profile_base = BASE_PATH.get("profile_uri", "").rstrip("/")
-    pres_path    = API_PATH.get("basic_presences", "")
-    presences_url = f"{profile_base}/{pres_path}"
+    # 1) Batch-presences call
+    base = BASE_PATH.get("profile_uri", "").rstrip("/")
+    path = API_PATH.get("basic_presences", "")
+    url  = f"{base}/{path}"
     params = {
-        "type": "primary",
-        "accountIds": ",".join(account_ids),
-        "platforms": "PS4,PS5,MOBILE_APP,PSPC",
-        "withOwnGameTitleInfo": "true",
+        "type":                "primary",
+        "accountIds":          ",".join(account_ids),
+        "platforms":           "PS4,PS5,MOBILE_APP,PSPC",
+        "withOwnGameTitleInfo":"true",
     }
     try:
-        resp = psn_client.authenticator.get(url=presences_url, params=params)
+        resp = psn_client.authenticator.get(url=url, params=params)
         resp.raise_for_status()
-        payload = resp.json()
-        batch_list = payload.get("basicPresences", [])
-        logger.debug(f"[PSN] Batch returned {len(batch_list)} entries")
-        # map accountId -> raw presence dict
-        all_presences = { entry.get("accountId"): entry for entry in batch_list if entry.get("accountId") }
+        batch = resp.json().get("basicPresences", [])
+        logger.debug(f"[PSN] Batch returned {len(batch)} entries")
+        last_capture_time["PlayStation"] = time.monotonic()
     except Exception as e:
-        logger.error(f"[PSN] Batch presences call failed: {e}")
-        all_presences = {}
+        logger.error(f"[PSN] Batch presences failed: {e}")
+        return
 
-    rows = []
-    check_time = datetime.utcnow().isoformat()
+    pres_map = {p["accountId"]: p for p in batch if "accountId" in p}
+    rows     = []
+    ts       = datetime.utcnow().isoformat()
 
     for friend in friends:
-        aid = friend.account_id
-        logger.debug(f"[PSN] Processing friend {friend.online_id} ({aid})")
+        aid  = friend.account_id
+        pres = pres_map.get(aid, {})
+        info = pres.get("primaryPlatformInfo", {}) or {}
+        game = pres.get("gameTitleInfoList", {}) or {}
 
-        pres = all_presences.get(aid, {})
-        # This pres dict should have:
-        #  - primaryPlatformInfo
-        #  - gameTitleInfoList (possibly empty or missing)
+        state = info.get("onlineStatus", "")
+        prev  = psn_last_status.get(aid)
+        psn_last_status[aid] = state
 
-        info = pres.get("primaryPlatformInfo", {})
-        game_info = pres.get("gameTitleInfoList", {}) or {}
+        # if no change AND not first run, skip
+        if prev is not None and prev == state:
+            continue
 
-        presence_state    = info.get("onlineStatus", "") or ""
-        presence_text     = game_info.get("titleName", "") or ""
-        presence_platform = game_info.get("launchPlatform", "") or ""
-        title_id          = game_info.get("npTitleId", "") or ""
-        last_seen         = info.get("lastOnlineDate", "") or ""
+        # decide trophy_json
+        trophy_json = psn_last_trophies.get(aid, "{}")
+        # only fetch fresh trophies on an actual transition _to_ offline _after_ first run
+        if prev is not None and prev != "offline" and state == "offline":
+            try:
+                user_obj = psnawp.user(online_id=friend.online_id, account_id=aid)
+                if hasattr(user_obj, "get_profile_legacy"):
+                    prof = user_obj.get_profile_legacy()
+                else:
+                    prof = user_obj.get_profile()
+                # convert to dict
+                if hasattr(prof, "model_dump"):
+                    data = prof.model_dump()
+                elif hasattr(prof, "dict"):
+                    data = prof.dict()
+                else:
+                    data = dict(prof)
 
-        # Trophy JSON as before
-        try:
-            profile_resp = psnawp.user(online_id=friend.online_id, account_id=aid) \
-                                 .get_profile_legacy()
-            full_profile = (
-                profile_resp.model_dump()
-                if hasattr(profile_resp, "model_dump")
-                else (profile_resp if isinstance(profile_resp, dict) else {})
-            )
-        except Exception as e:
-            logger.error(f"[PSN] get_profile_legacy failed for {aid}: {e}")
-            full_profile = {}
+                block = data.get("profile", {}).get("profile", {}) or {}
+                trophy = block.get("trophySummary", {}) or {}
+                trophy_json = json.dumps(trophy, sort_keys=True)
+                psn_last_trophies[aid] = trophy_json
+                logger.debug(f"[PSN:{aid}] Fetched trophies on offline: {trophy_json}")
+            except Exception as e:
+                logger.error(f"[PSN:{aid}] Trophy fetch failed: {e}")
+            time.sleep(1)
 
-        outer     = full_profile.get("profile", {}) or {}
-        inner     = outer.get("profile") or outer
-        prof_block = inner or {}
-        trophy_summary = prof_block.get("trophySummary", {}) or {}
-        trophy_json = json.dumps(trophy_summary, sort_keys=True)
-
-        row = {
+        # build row
+        rows.append({
             "platform":          "PlayStation",
-            "time":              check_time,
+            "time":              ts,
             "userName":          friend.online_id,
             "accountID":         aid,
-            "presenceState":     presence_state,
-            "presenceText":      presence_text,
-            "presencePlatform":  presence_platform,
-            "titleId":           title_id,
+            "presenceState":     state,
+            "presenceText":      game.get("titleName", ""),
+            "presencePlatform":  game.get("launchPlatform", ""),
+            "titleId":           game.get("npTitleId", ""),
             "gamerScore":        trophy_json,
-            "multiplayerSummary":"",  # PSN doesn’t provide this
-            "lastSeen":          last_seen
-        }
-
-        prev = psn_last_status.get(friend.online_id)
-        if row["presenceState"] != prev:
-            psn_last_status[friend.online_id] = row["presenceState"]
-            rows.append(row)
-
-        time.sleep(1)  # throttle profile requests
+            "multiplayerSummary":"",
+            "lastSeen":          info.get("lastOnlineDate", "")
+        })
 
     if rows:
-        logger.debug(f"[PSN] Writing {len(rows)} rows to CSV; sample: {rows[0]!r}")
+        logger.debug(f"[PSN] Writing {len(rows)} rows to CSV")
         update_person_csv(rows, "PlayStation")
-        last_capture_time["PlayStation"] = time.monotonic()
 
 
 # ----------------------------------------------------------------------------
