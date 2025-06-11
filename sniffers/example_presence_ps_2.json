@@ -1,0 +1,86 @@
+{
+  "profile": {
+    "profile": {
+      "onlineId": "nbballou",
+      "accountId": "4645135650815230075",
+      "npId": "bmJiYWxsb3VAYjgudXM=",
+      "avatarUrls": [
+        {
+          "size": "l",
+          "avatarUrl": "http://static-resource.np.community.playstation.net/avatar/WWS_A/A0022.png"
+        }
+      ],
+      "plus": 0,
+      "aboutMe": "",
+      "languagesUsed": [
+        "en"
+      ],
+      "trophySummary": {
+        "level": 262,
+        "progress": 90,
+        "earnedTrophies": {
+          "platinum": 14,
+          "gold": 91,
+          "silver": 333,
+          "bronze": 1391
+        }
+      },
+      "isOfficiallyVerified": false,
+      "personalDetailSharing": "no",
+      "personalDetailSharingRequestMessageFlag": false,
+      "primaryOnlineStatus": "offline",
+      "presences": [
+        {
+          "onlineStatus": "offline",
+          "hasBroadcastData": false,
+          "lastOnlineDate": "2021-06-16T12:59:51Z"
+        }
+      ],
+      "friendRelation": "friend",
+      "requestMessageFlag": false,
+      "blocking": false,
+      "following": true,
+      "consoleAvailability": {
+        "availabilityStatus": "offline"
+      }
+    }
+  },
+  "presence": {
+    "basicPresence": {
+      "availability": "unavailable",
+      "lastAvailableDate": "2024-07-22T15:13:17.476Z",
+      "primaryPlatformInfo": {
+        "onlineStatus": "offline",
+        "platform": "PS5",
+        "lastOnlineDate": "2024-07-22T15:13:17.476Z"
+      }
+    }
+  }
+}
+
+
+Requesting batch presences for: ['4645135650815230075', '461699146552757965']
+{
+  "basicPresences": [
+    {
+      "accountId": "4645135650815230075",
+      "availability": "unavailable",
+      "lastAvailableDate": "2024-07-22T15:13:17.476Z",
+      "primaryPlatformInfo": {
+        "onlineStatus": "offline",
+        "platform": "PS5",
+        "lastOnlineDate": "2024-07-22T15:13:17.476Z"
+      }
+    },
+    {
+      "accountId": "461699146552757965",
+      "availability": "unavailable",
+      "lastAvailableDate": "2025-04-08T17:03:04.143Z",
+      "primaryPlatformInfo": {
+        "onlineStatus": "offline",
+        "platform": "PS5",
+        "lastOnlineDate": "2025-04-08T17:03:04.143Z"
+      }
+    }
+  ]
+}

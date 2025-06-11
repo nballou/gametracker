@@ -231,8 +231,10 @@ def fetch_playstation():
     for friend in friends:
         aid  = friend.account_id
         pres = pres_map.get(aid, {})
+        # logger.debug(f"[PSN] Raw batch entry for {aid!r}: {json.dumps(pres, indent=2)}")
         info = pres.get("primaryPlatformInfo", {}) or {}
-        game = pres.get("gameTitleInfoList", {}) or {}
+        game_list = pres.get("gameTitleInfoList", []) or []
+        game = game_list[0] if game_list else {}
 
         state = info.get("onlineStatus", "")
         prev  = psn_last_status.get(aid)
