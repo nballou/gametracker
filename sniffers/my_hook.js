@@ -1,4 +1,4 @@
-'use strict';
+a.	frida -U -n Xbox -l ~/Desktop/my_hook.js'use strict';
 
 // An object to accumulate data per SSL connection (keyed by its pointer as string)
 var accumulators = {};

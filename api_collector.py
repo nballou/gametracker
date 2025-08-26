@@ -30,9 +30,9 @@ EMAIL_USER = os.getenv("EMAIL_USER")
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
 
 # Xbox Azure AD creds from .env
-XBOX_CLIENT_ID     = os.environ["XBOX_CLIENT_ID"]
-XBOX_CLIENT_SECRET = os.environ["XBOX_SECRET_VALUE"]
-XBOX_REDIRECT_URI  = os.environ.get("XBOX_REDIRECT_URI", "http://localhost/auth/callback")
+XBOX_CLIENT_ID     = os.getenv("XBOX_CLIENT_ID")
+XBOX_CLIENT_SECRET = os.getenv("XBOX_SECRET_VALUE")
+XBOX_REDIRECT_URI  = os.getenv("XBOX_REDIRECT_URI", "http://localhost/auth/callback")
 
 daily_errors = {"PlayStation": [], "Xbox": []}
 
@@ -68,12 +68,6 @@ def init_xbox_client():
 
     return XboxLiveClient(auth)
 
-# Initialize clients
-yag = yagmail.SMTP(EMAIL_USER, password=EMAIL_PASSWORD)
-psnawp = PSNAWP(os.environ["PSN_API_KEY"])
-psn_client = psnawp.me()
-xbl_client = init_xbox_client()
-
 # ----------------------------------------------------------------------------
 # Constants & State
 # ----------------------------------------------------------------------------
@@ -94,8 +88,8 @@ last_status = {}  # maps (platform, accountID) → (state, text, platform)
 # Logging setup
 # ----------------------------------------------------------------------------
 logger = getLogger("orchestrator_api")
-logger.setLevel("DEBUG")
-handler = TimedRotatingFileHandler(os.path.join(LOGS_DIR,f"log-{datetime.utcnow():%Y-%m-%d}.log"),when="midnight",backupCount=14)
+log_path = os.path.join(LOGS_DIR, "orchestrator.log")
+handler = TimedRotatingFileHandler(log_path, when="midnight", backupCount=14, utc=True)
 handler.setFormatter(Formatter("%(asctime)s [%(levelname)s] %(message)s","%Y-%m-%d %H:%M:%S"))
 logger.addHandler(handler)
 console=StreamHandler(); console.setFormatter(handler.formatter); logger.addHandler(console)
@@ -104,8 +98,11 @@ console=StreamHandler(); console.setFormatter(handler.formatter); logger.addHand
 # Email helper
 def send_email(subject, body):
     logger.info(f"Sending email: {subject}")
-    try: yag.send(to=EMAIL_USER, subject=subject, contents=body)
-    except Exception as e: logger.error(f"Email failed: {e}")
+    try:
+        with yagmail.SMTP(EMAIL_USER, password=EMAIL_PASSWORD) as smtp:
+            smtp.send(to=EMAIL_USER, subject=subject, contents=body)
+    except Exception as e:
+        logger.error(f"Email failed: {e}")
 
 
 def send_daily_digest():
@@ -120,19 +117,25 @@ def send_daily_digest():
     updates      = {p: 0   for p in platforms}
 
     # Count rows & unique users in each <platform>-<user>.csv
-    for fname in os.listdir(data_dir):
+    for fname in os.listdir(DATA_DIR):
         if not fname.endswith(".csv"):
             continue
         platform = fname.split("-", 1)[0]
         if platform not in platforms:
             continue
-        path = os.path.join(data_dir, fname)
+        path = os.path.join(DATA_DIR, fname)
+
         with open(path) as f:
             reader = csv.DictReader(f)
             for row in reader:
-                ts = datetime.fromisoformat(row["time"])
+                try:
+                    ts = datetime.fromisoformat(row.get("time",""))
+                except Exception:
+                    continue
                 if ts >= cutoff:
-                    unique_users[platform].add(row["userName"])
+                    user = row.get("userName")
+                    if user:
+                        unique_users[platform].add(user)
                     updates[platform] += 1
 
     # Build email body
@@ -154,7 +157,8 @@ def send_daily_digest():
     body    = "\n".join(lines)
     logger.info("Sending daily digest email with subject: %s", subject)
     try:
-        yag.send(subject=subject, contents=body)
+        with yagmail.SMTP(EMAIL_USER, password=EMAIL_PASSWORD) as smtp:
+            smtp.send(to=EMAIL_USER, subject=subject, contents=body)
         logger.info("Daily digest email sent successfully.")
     except Exception as e:
         logger.error("Failed to send daily digest email: %s", e)
@@ -182,6 +186,9 @@ def _digest_runner():
     send_daily_digest()
     # schedule the next one in exactly 24h
     threading.Timer(24*3600, _digest_runner).start()
+
+def _record_error(platform, msg):
+    daily_errors.setdefault(platform, []).append(msg)
 
 # ----------------------------------------------------------------------------
 # CSV persistence
@@ -222,6 +229,7 @@ def fetch_playstation():
         last_capture_time["PlayStation"] = time.monotonic()
     except Exception as e:
         logger.error(f"[PSN] Batch presences failed: {e}")
+        _record_error("PlayStation", f"Batch presences failed: {e}")
         return
 
     pres_map = {p["accountId"]: p for p in batch if "accountId" in p}
@@ -406,6 +414,7 @@ async def fetch_xbox():
         last_capture_time["Xbox"] = time.monotonic()
     except Exception as e:
         logger.error(f"[Xbox] Error in get_presence_batch: {e}")
+        _record_error("Xbox", f"get_presence_batch: {e}")
         return
 
     # 3) Process & write
@@ -447,6 +456,17 @@ def api_key_warning_runner():
 # Main loop
 # ----------------------------------------------------------------------------
 if __name__=="__main__":
+
+    REQUIRED = ["EMAIL_USER","EMAIL_PASSWORD","PSN_API_KEY","XBOX_CLIENT_ID","XBOX_SECRET_VALUE"]
+    missing = [k for k in REQUIRED if not os.getenv(k)]
+    if missing:
+        raise RuntimeError(f"Missing env vars: {', '.join(missing)}")
+
+    # Initialize clients
+    psnawp = PSNAWP(getenv["PSN_API_KEY"])
+    psn_client = psnawp.me()
+    xbl_client = init_xbox_client()
+
     threading.Thread(target=alert_monitor,daemon=True).start()
     threading.Timer(API_KEY_WARN_DELAY,api_key_warning_runner).start()
 

@@ -16,3 +16,4 @@ override_ua.js
 psnawp_test.py
 .venv/
 test_psn_batch.py
+test_psn.py
