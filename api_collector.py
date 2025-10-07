@@ -25,6 +25,10 @@ from xbox.webapi.authentication.models import OAuth2TokenResponse
 # ----------------------------------------------------------------------------
 load_dotenv()  # pulls .env into os.environ
 
+# Enable/disable individual platforms for collection
+ENABLE_PLAYSTATION = True
+ENABLE_XBOX        = True
+
 # Email creds\EMAIL_USER = creds["email_address"]
 EMAIL_USER = os.getenv("EMAIL_USER")
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
@@ -463,9 +467,9 @@ if __name__=="__main__":
         raise RuntimeError(f"Missing env vars: {', '.join(missing)}")
 
     # Initialize clients
-    psnawp = PSNAWP(getenv["PSN_API_KEY"])
-    psn_client = psnawp.me()
-    xbl_client = init_xbox_client()
+    psnawp = PSNAWP(os.getenv("PSN_API_KEY")) if ENABLE_PLAYSTATION else None
+    psn_client = psnawp.me() if ENABLE_PLAYSTATION else None
+    xbl_client = init_xbox_client() if ENABLE_XBOX else None
 
     threading.Thread(target=alert_monitor,daemon=True).start()
     threading.Timer(API_KEY_WARN_DELAY,api_key_warning_runner).start()
@@ -474,9 +478,11 @@ if __name__=="__main__":
     logger.info("Starting polling…")
     while True:
         try:
-            fetch_playstation()
-            time.sleep(2)
-            fetch_xbox_telemetry()
+            if ENABLE_PLAYSTATION:
+                fetch_playstation()
+            if ENABLE_XBOX:
+                time.sleep(2)
+                fetch_xbox_telemetry()
         except Exception as e:
             logger.error(f"Error: {e}")
 
