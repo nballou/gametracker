@@ -1,12 +1,12 @@
 # gametracker
 
-**Status: work in progress.** This repository tracks friends' gaming presence across PlayStation, Xbox, and (eventually) Nintendo Switch, using each platform's friends-list presence API. It is being handed off to the RSE team at an early stage — the core functionality works, but the codebase is not yet production-ready.
+**Status: work in progress.** This repository tracks friends' gaming presence across PlayStation, Xbox, and (eventually) Nintendo Switch, using each platform's friends-list presence API. The core functionality has been tested in two approved small-scale studies in my previous position at the University of Oxford, but the codebase is not yet production-ready.
 
 ---
 
 ## What it does
 
-`orchestrator.py` polls the friends lists of authenticated accounts on each enabled platform at a configurable interval (default: 5 minutes). When a friend's presence state changes (offline → online, game switch, online → offline), a row is appended to a per-user CSV file in `data/`. A background thread sends email alerts if a platform goes silent, and a daily digest email summarises activity.
+`orchestrator.py` polls the friends lists of authenticated accounts on each enabled platform at a configurable interval (default: 5 minutes). When a friend's presence state changes (offline → online, game switch, online → offline), a row is appended to a per-user CSV file in `data/` (not tracked in Git; eventually this should instead send data to a local SQL database). A background thread sends email alerts if a platform goes silent, and a daily digest email summarises activity, for monitoring purposes.
 
 `messaging.py` is a separate process that watches a specific participant's CSV and sends WhatsApp messages via Twilio when they come online or go offline. This is study-specific and not integrated into the main polling loop.
 
