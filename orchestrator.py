@@ -1,690 +1,167 @@
-import frida
-import subprocess
-import time
-from datetime import datetime, time as dt_time, timedelta
-import sys
+"""
+Gametracker orchestrator — entry point and shared infrastructure.
+
+Handles logging, CSV persistence, the alert monitor, and the main polling
+loop. Platform modules (playstation.py, xbox.py, nintendo.py) are imported
+here; toggle collection on/off with the flags below.
+
+Run with:
+    python orchestrator.py
+"""
+
 import csv
 import os
-import io
-import random
-import logging
-from logging.handlers import TimedRotatingFileHandler
-import xml.etree.ElementTree as ET
-import requests
-import yagmail
 import threading
-import json
-import warnings
-import re
+import time
+from logging import Formatter, StreamHandler, getLogger
+from logging.handlers import TimedRotatingFileHandler
 
-# Email settings
-with open("credentials.json", "r") as cred_file:
-    creds = json.load(cred_file)
-yag = yagmail.SMTP(creds["email_address"], password=creds["password"])
+from dotenv import load_dotenv
 
-# Directory to save CSV files locally (adjust as needed)
-data_dir = "data"
-if not os.path.exists(data_dir):
-    os.makedirs(data_dir)
+import digest
+import nintendo
+import playstation
+import xbox
 
-# Configuration: digest frequency and optional first digest time of day (HH:MM in 24-hour)
-# Latter can be set to None or a string 'HH:MM'. If None, first digest is sent immediately.
-digest_interval_hours = 12 # how often to send the daily digest email
-first_digest_time = None  # e.g. '08:30' for 8:30 AM, or None for now
+load_dotenv()
 
-# Scraping and alert settings.
-frequency = 180 # how often, in seconds, to cycle between apps
-alert_check_interval = 60 # seconds between each check.
-reopen_timeout = 2 * frequency + alert_check_interval  # seconds before restarting the app if telemetry is not received.
-reboot_timeout = 3 * frequency + alert_check_interval  # seconds before rebooting the device if telemetry is still not received.
-recovery_timeout = 4 * frequency + alert_check_interval   # seconds to wait *after* a reboot before sending a failure alert.
+# ── Platform toggles ──────────────────────────────────────────────────────────
+ENABLE_PLAYSTATION = True
+ENABLE_XBOX        = True
+ENABLE_NINTENDO    = False   # not yet implemented; see nintendo.py
 
-# Alert-related global variables and initializations
-reboot_event = threading.Event()
-last_status = {} # initialize the last_status dictionary
-state_lock = threading.Lock()
-restart_count = 0
-reboot_count  = 0
+# ── Configuration ─────────────────────────────────────────────────────────────
+DATA_DIR  = "data"
+LOGS_DIR  = "logs"
+POLL_INTERVAL      = 300              # seconds between polling cycles
+API_KEY_WARN_DELAY = 3 * 7 * 24 * 3600  # remind to rotate PSN key after 3 weeks
 
-# -----------------------------------------------------------------------------
-# Logging configuration and functions
-# -----------------------------------------------------------------------------
+for d in (DATA_DIR, LOGS_DIR):
+    os.makedirs(d, exist_ok=True)
 
-class DailyRotatingFileHandler(TimedRotatingFileHandler):
-    def doRollover(self):
-        super().doRollover()
-        # recompute baseFilename for the new date
-        new_base = os.path.join(
-            logs_dir,
-            f"log-{datetime.utcnow():%Y-%m-%d}.log"
-        )
-        self.baseFilename = new_base
-        # reopen the stream on the new file
-        if getattr(self, "stream", None):
-            self.stream.close()
-        self.stream = self._open()
+# ── Logging ───────────────────────────────────────────────────────────────────
+# Root logger for this package; platform child loggers (gametracker.playstation
+# etc.) inherit this configuration automatically.
+logger = getLogger("gametracker")
+logger.setLevel("DEBUG")
+log_path = os.path.join(LOGS_DIR, "gametracker.log")
+_handler = TimedRotatingFileHandler(log_path, when="midnight", backupCount=14, utc=True)
+_handler.setFormatter(Formatter(
+    "%(asctime)s [%(levelname)s] %(name)s: %(message)s", "%Y-%m-%d %H:%M:%S"
+))
+logger.addHandler(_handler)
+_console = StreamHandler()
+_console.setFormatter(_handler.formatter)
+logger.addHandler(_console)
 
-def namer(default_name):
-    """
-    Default name example: "logs/log-2025-04-08.log.2025-04-09"
-    We want this to be: "logs/log-2025-04-09.log"
-    """
-    base_dir, fname = os.path.split(default_name)
-    parts = fname.split('.')
-    if len(parts) >= 3:
-        new_name = f"log-{parts[2]}.log"
-        return os.path.join(base_dir, new_name)
-    else:
-        return default_name
+# ── Shared state ──────────────────────────────────────────────────────────────
+last_capture_time = {p: time.monotonic() for p in ("PlayStation", "Xbox", "Nintendo")}
+escalation_state  = {p: 0               for p in ("PlayStation", "Xbox", "Nintendo")}
 
-# Ensure the logs/ directory exists.
-logs_dir = "logs"
-if not os.path.exists(logs_dir):
-    os.makedirs(logs_dir)
+# ── CSV persistence ───────────────────────────────────────────────────────────
+_FIELDNAMES = [
+    "platform", "time", "userName", "accountID",
+    "presenceState", "presenceText", "presencePlatform",
+    "titleId", "gamerScore", "multiplayerSummary", "lastSeen",
+]
 
-# Compute today's date (YYYY-MM-DD) and use it in the base filename.
-today = datetime.utcnow().strftime("%Y-%m-%d")
-base_log_filename = os.path.join(logs_dir, f"log-{today}.log")
-
-# Set up a TimedRotatingFileHandler so that the logs are rotated at midnight.
-handler = DailyRotatingFileHandler(base_log_filename, when="midnight", backupCount=14)
-handler.suffix = "%Y-%m-%d"
-handler.namer  = namer
-
-# log without milliseconds.
-formatter = logging.Formatter(
-    '%(asctime)s [%(levelname)s] %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S'
-)
-formatter.converter = time.gmtime
-handler.setFormatter(formatter)
-
-# Set up the logger.
-logger = logging.getLogger("orchestrator")
-logger.setLevel(logging.DEBUG)
-logger.addHandler(handler)
-
-# Also output logs to the console.
-consoleHandler = logging.StreamHandler()
-consoleHandler.setFormatter(formatter)
-consoleHandler.setLevel(logging.DEBUG)
-logger.addHandler(consoleHandler)
-
-logger.info("Logger configured: logs stored in logs/ as log-YYYY-MM-DD.log with timestamps without milliseconds.")
-
-# -----------------------------------------------------------------------------
-# Alert configuration and functions
-# -----------------------------------------------------------------------------
-
-# Global variable to hold the timestamp (in seconds) of the last telemetry capture.
-last_capture_time = {
-    "PlayStation": time.monotonic(),
-    "Xbox": time.monotonic()
-}
-# Flags to track if an alert has already been sent.
-alert_sent = {
-    "PlayStation": False,
-    "Xbox": False
-}
-
-# Escalation state for each platform: 0 = no escalation; 1 = app restarted; 2 = device rebooted; 3 = terminal state, alert sent.
-escalation_state = {
-    "PlayStation": 0,
-    "Xbox": 0
-}
-
-# near the top
-needs_restart = {
-    "PlayStation": False,
-    "Xbox":       False,
-}
-needs_reboot  = {
-    "PlayStation": False,
-    "Xbox":       False,
-}
-
-def update_last_capture(platform):
-    """
-    Update the last capture time for the specified platform.
-    This function is called when telemetry is received.
-    """
-    logger.info(f"[HOST] Received telemetry from {platform}.")
-
-    global last_capture_time, escalation_state
-    # thread-safe reset of the platform’s state
-    with state_lock:
-        last_capture_time[platform] = time.monotonic()
-        escalation_state[platform] = 0
-
-def send_alert_email(subject, body):
-    """
-    Sends an alert email.
-    """
-    logger.info("Sending alert email: %s", subject)
-    try:
-        yag.send(subject=subject, contents = body)
-    except Exception as e:
-        logger.error("Failed to send alert email: %s", e)
-
-def send_daily_digest():
-    global restart_count, reboot_count
-    """
-    Collect stats for the past 24h and email them.
-    """
-
-    cutoff = datetime.utcnow() - timedelta(days=1)
-    logger.info("Digest cutoff time: %s", cutoff.isoformat())
-
-    # tally unique users & updates per platform
-    platforms = ["PlayStation", "Xbox"]
-    unique_users = {p:set() for p in platforms}
-    updates      = {p:0    for p in platforms}
-
-    for fname in os.listdir(data_dir):
-        if not fname.endswith(".csv"):
-            continue
-        platform = fname.split("-",1)[0]
-        path     = os.path.join(data_dir, fname)
-        with open(path) as f:
-            reader = csv.DictReader(f)
-            for row in reader:
-                ts = datetime.fromisoformat(row["time"])
-                if ts >= cutoff:
-                    unique_users[platform].add(row["userName"])
-                    updates[platform] += 1
-
-    # build email body
-    lines = []
-    for p in platforms:
-        lines.append(f"{p}: {len(unique_users[p])} unique users, {updates[p]} updates")
-    lines.append(f"Restarts: {restart_count}")
-    lines.append(f"Reboots: {reboot_count}")
-
-    subject = "Daily Telemetry Digest"
-    body    = "\n".join(lines)
-    logger.info("Sending daily digest email with subject: %s", subject)
-    try:
-        yag.send(subject=subject, contents=body)
-        logger.info("Daily digest email sent successfully.")
-    except Exception as e:
-        logger.error("Failed to send daily digest email: %s", e)
-
-    restart_count = 0
-    reboot_count  = 0
-
-def schedule_digest(first_time=None):
-    """
-    Schedule the first digest at a specific time of day, then recurring every digest_interval_hours.
-    :param first_time: datetime.time or string 'HH:MM'. If None, send immediately.
-    """
-    # Determine initial delay
-    now = datetime.now()
-    if first_time:
-        if isinstance(first_time, str):
-            hr, mn = map(int, first_time.split(':'))
-            first_time = dt_time(hour=hr, minute=mn)
-        # Build a datetime for today at the target time
-        target = datetime.combine(now.date(), first_time)
-        if target < now:
-            # schedule for tomorrow
-            target += timedelta(days=1)
-        delay = (target - now).total_seconds()
-    else:
-        delay = digest_interval_hours * 3600
-
-    logger.info(f"Scheduling first digest in {delay:.0f} seconds")
-    threading.Timer(delay, _digest_runner).start()
-
-def _digest_runner():
-    send_daily_digest()
-    # Schedule next run after fixed interval
-    interval_seconds = digest_interval_hours * 3600
-    logger.info(f"Scheduling next digest in {interval_seconds} seconds")
-    threading.Timer(interval_seconds, _digest_runner).start()
-
-def reboot_device(force = False):
-
-    if force:
-        with state_lock:
-            escalation_state["PlayStation"] = 2
-            escalation_state["Xbox"] = 2
-
-    if not force:
-        # Check if the device is already in root mode.
-        result = subprocess.run(["adb", "shell", "whoami"], capture_output=True, text=True)
-        if "root" in result.stdout.strip():
-            logger.info("[HOST] Device is already in root mode. Closing apps and proceeding...")
-            close_app("com.scee.psxandroid")
-            close_app("com.microsoft.xboxone.smartglass")
-            time.sleep(2)
-            return
-
-    """Reboot the device using ADB."""
-    logger.info("[ADB] Rebooting device...")
-    reboot_event.set()
-    subprocess.run(["adb", "reboot"])
-    time.sleep(40)  # wait for the device to finish rebooting
-    subprocess.run(["adb", "root"])
-    logger.info("[ADB] Waiting for device to come back online...")
-    subprocess.run(["adb", "wait-for-device"])
-    reboot_event.clear()
-    time.sleep(30)  # wait for the device to finish rebooting
-    logger.info("[ADB] Device reboot completed and event cleared.")
-    reboot_frida()
-
-def alert_monitor():
-    """
-    Monitor telemetry timestamps. For each platform:
-     - If no telemetry for reopen_timeout seconds and escalation state is 0:
-         * Send an alert email and restart the app.
-         * Set escalation state to 1.
-     - If still no telemetry after reboot_timeout seconds and escalation state is 1:
-         * Send another alert email and reboot the device.
-         * Set escalation state for both platforms to 2.
-    """
-    global last_capture_time, escalation_state
-    while True:
-        time.sleep(alert_check_interval)
-        now = time.monotonic()
-
-        # Take a thread-safe snapshot of timestamps & states
-        with state_lock:
-            snapshot = list(last_capture_time.items())
-            states   = escalation_state.copy()
-
-        # Check each platform’s elapsed time and escalate as needed
-        for platform, last_ts in snapshot:
-            elapsed = now - last_ts
-            state   = states[platform]
-
-            # 1) No escalation yet → restart app if no telemetry for reopen_timeout
-            if state == 0 and elapsed > reopen_timeout:
-                logger.info("Marking %s for restart on next cycle", platform)
-                needs_restart[platform] = True
-                with state_lock:
-                    escalation_state[platform] = 1
-
-            # 2) Already restarted once → reboot device if still no telemetry by reboot_timeout
-            elif state == 1 and elapsed > reboot_timeout:
-                logger.info("Marking %s for reboot on next cycle", platform)
-                needs_reboot[platform] = True
-                with state_lock:
-                    escalation_state[platform] = 2
-
-            # 3) Already rebooted → final failure alert if still no telemetry by recovery_timeout
-            elif state == 2 and elapsed > recovery_timeout:
-                logger.info("No telemetry from %s after reboot; sending failure alert.", platform)
-                send_alert_email(
-                    subject=f"Telemetry Failure - {platform} - No Recovery",
-                    body=f"No telemetry has resumed from {platform} within {recovery_timeout} seconds after reboot."
-                )
-                # Terminal “failed” state to prevent repeat alerts
-                with state_lock:
-                    escalation_state[platform] = 3
-                        
-# Start the alert monitoring thread as a daemon so it runs in the background.
-alert_thread = threading.Thread(target=alert_monitor, daemon=True)
-alert_thread.start()
-
-def kill_frida_server():
-    try:
-        subprocess.run(["adb", "shell", "pkill", "frida-server"], check=True)
-    except subprocess.CalledProcessError as e:
-        try:
-            subprocess.run(["adb", "shell", "killall", "frida-server"], check=True)
-            # logger.debug("Successfully ran killall frida-server.")
-        except subprocess.CalledProcessError as e:
-            pass
-    time.sleep(1)
-
-def start_frida_server():
-    """
-    Start Frida-server on the AVD.
-    This assumes that the frida-server binary is already on the device
-    at /data/local/tmp/ and has executable permissions.
-    """
-    logger.info("[HOST] Starting frida-server on device...")
-    # Use adb shell with su to start frida-server in the background.
-    command = "adb shell nohup /data/local/tmp/frida-server > /dev/null 2>&1 &"
-    subprocess.run(command, shell=True)
-    time.sleep(3)
-
-def wait_for_frida(timeout=30):
-    """
-    Poll until frida-server appears in the process list or until timeout.
-    Uses `pidof` which is more reliable than `ps|grep`.
-    """
-    for i in range(timeout):
-        try:
-            out = subprocess.check_output(
-                "adb shell pidof frida-server", 
-                shell=True, text=True
-            ).strip()
-            if out:
-                logger.info(f"wait_for_frida: frida-server pid={out}")
-                return True
-        except subprocess.CalledProcessError:
-            # pidof returns non-zero if not found
-            pass
-
-        # Optional: log each retry
-        logger.debug(f"wait_for_frida: attempt {i+1}/{timeout} – frida-server not yet up")
-        time.sleep(1)
-
-    return False
-
-def reboot_frida():
-    """
-    Reboot the frida-server on the device.
-    This is useful if the server has crashed or is unresponsive.
-    """
-    # logger.info("[HOST] Rebooting frida-server...")
-    start_frida_server()
-    if not wait_for_frida(30):
-        logger.error("Frida-server never came up after reboot!")
-        return
-    logger.info("Frida-server is running.")
-
-def get_ui_dump():
-    # Dump the UI hierarchy to the device's sdcard.
-    subprocess.run(["adb", "shell", "uiautomator", "dump", "/sdcard/window_dump.xml"], check=True)
-    # Retrieve the XML content from the device.
-    result = subprocess.run(["adb", "shell", "cat", "/sdcard/window_dump.xml"],
-                            stdout=subprocess.PIPE, check=True, text=True)
-    return result.stdout
-
-def is_friends_list_visible():
-    xml_str = get_ui_dump()
-    try:
-        root = ET.fromstring(xml_str)
-    except ET.ParseError as e:
-        print("Error parsing XML:", e)
-        return False
-
-    for elem in root.iter("node"):
-        resource_id = elem.get("resource-id")
-        if resource_id and "friend-list" in resource_id:
-            return True
-    return False
-
-def process_csv_data(csv_str, platform):
-    """
-    Process CSV data received from Frida for a given platform.
-    Only add new rows if the person's presenceState has changed.
-    Also add a checkTimestamp and platform column.
-    """
-    global last_status
-    new_rows = []
-    now = datetime.utcnow().isoformat()
-    f = io.StringIO(csv_str)
-    reader = csv.DictReader(f)
-    debug_count = 0
-    for row in reader:
-        unique_id = row.get("accountID")  # unique identifier for the user
-        if not unique_id:
-            logger.debug("Skipping row with empty unique_id: %s", row)
-            continue
-        key = (platform, unique_id)
-        new_presence_state = row.get("presenceState", "")
-        new_presence_text = row.get("presenceText", "")
-        new_presence_platform = row.get("presencePlatform", "")
-        new_values = (new_presence_state, new_presence_text, new_presence_platform)
-        old_values = last_status.get(key, (None, None, None))
-        # Ignore update if only change is in the "Last seen" presenceText.
-        if (key in last_status and 
-            old_values[0] == new_presence_state and 
-            old_values[2] == new_presence_platform and 
-            old_values[1].startswith("Last seen") and 
-            new_presence_text.startswith("Last seen")):
-            continue
-        if key not in last_status or old_values != new_values:
-            last_status[key] = new_values
-            row["time"] = now
-            new_rows.append(row)
-            debug_count += 1
-
-    if new_rows:
-        update_person_csv(new_rows, platform)
-
-def update_person_csv(new_rows, platform):
-    """Append new rows to each person's individual CSV file."""
-    fieldnames = [
-        "platform",
-        "time",
-        "userName",
-        "accountID",
-        "presenceState",
-        "presenceText",
-        "presencePlatform",
-        "titleID",
-        "gamerScore",
-        "multiplayerSummary",
-        "lastSeen"
-    ]
-    changed_users = []
-    for row in new_rows:
-        userName = row.get("userName")
-        if not userName:
-            continue
-        filename = os.path.join(data_dir, f"{platform}-{userName}.csv")
-        file_exists = os.path.exists(filename)
-        with open(filename, "a", newline="") as f:
-            writer = csv.DictWriter(f, fieldnames=fieldnames)
-            if not file_exists:
+def update_person_csv(rows: list[dict], platform: str):
+    """Append presence rows to per-user CSV files under DATA_DIR."""
+    for row in rows:
+        path   = os.path.join(DATA_DIR, f"{platform}-{row['userName']}.csv")
+        exists = os.path.exists(path)
+        with open(path, "a", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=_FIELDNAMES)
+            if not exists:
                 writer.writeheader()
-                logger.debug("Creating new file and writing header to %s.", filename)
-            writer.writerow({key: row.get(key, "") for key in fieldnames})
-        changed_users.append(userName)
-    
-    # Single log entry listing all users whose status changed
-    if changed_users:
-        logger.info(
-            "Recorded %d status update(s) for %s: [%s]",
-            len(changed_users),
-            platform,
-            ", ".join(changed_users)
-        )
+            writer.writerow({k: row.get(k, "") for k in _FIELDNAMES})
 
-def open_friends_tab(package):
-    if package == "com.scee.psxandroid":
-        time.sleep(5)
-        subprocess.run(["adb", "shell", "input", "tap", "955", "200"]) # open friends tab
-        time.sleep(5)
-
-    if package == "com.microsoft.xboxone.smartglass":
-        time.sleep(5)
-        subprocess.run(["adb", "shell", "input", "tap", "320", "2190"]) # open friends tab
-        time.sleep(5)
-
-def launch_app(package):
-    """Launch an Android app via ADB using monkey command."""
-    logger.info(f"[ADB] Launching {package} using monkey command")
-    subprocess.run(
-        ["adb", "shell", "monkey", "-p", package, "-c", "android.intent.category.LAUNCHER", "1"],
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL
-    )
-    time.sleep(5)
-    open_friends_tab(package)
-
-def close_app(package):
-    """Close the app using ADB."""
-    logger.info(f"[ADB] Closing {package}...")
-    subprocess.run(
-        ["adb", "shell", "am", "force-stop", package],
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL
-    )
-    time.sleep(5)
-
-def bring_to_foreground(package, activity):
-    """Bring the app to the foreground using ADB."""
-    # logger.info(f"[ADB] Bringing {package}/{activity} to foreground")
-    subprocess.run(["adb", "shell", "am", "start", "-n", f"{package}/{activity}"])
-    time.sleep(5)
-    if package == "com.scee.psxandroid":
-        if not is_friends_list_visible():
-            logger.info(f"[ADB] Friends list not visible. Opening friends tab for {package}.")
-            open_friends_tab(package)
-    else: 
-        open_friends_tab(package)
-
-def swipe_down():
-    """Perform a vertical swipe from a random position within the specified rectangle."""
-    start_x = random.randint(150, 900)
-    start_y = random.randint(600, 950)
-    end_y = random.randint(1800, 2000)  # Ensure the swipe ends no lower than Y = 1800
-    # logger.info(f"[ADB] Swiping from ({start_x}, {start_y}) to ({start_x}, {end_y})")
-    subprocess.run(["adb", "shell", "input", "swipe", str(start_x), str(start_y), str(start_x), str(end_y)])
-
-def is_app_running(device, app_alias):
-    """Check if the app process is already running."""
-    processes = device.enumerate_processes()  # Note: using snake_case method
-    for proc in processes:
-        if proc.name == app_alias:
-            return True
-    return False
-
-def attach_frida_to_app(package_name, app_alias, activity, script_path, session_store):
-    """Attach Frida to the app process (spawn if needed) and load the provided script."""
-    device = frida.get_usb_device(timeout=5)
-    running = is_app_running(device, app_alias)
-    
-    if running:
-        try:
-            process = device.get_process(app_alias)
-            # bring app to foreground as before…
-            with warnings.catch_warnings():
-                warnings.simplefilter("ignore")
-                bring_to_foreground(package_name, activity)
-            time.sleep(5)
-
-            # ← INSERT A 15-SECOND CHECK HERE BEFORE SWIPING ↓
-            # map your app_alias ("PS App"/"Xbox") back to the telemetry key ("PlayStation"/"Xbox")
-            if app_alias == "PS App":
-                platform = "PlayStation"
-            elif app_alias == "Xbox":
-                platform = "Xbox"
-            else:
-                platform = None
-
-            if platform is None or time.monotonic() - last_capture_time.get(platform, 0) > 15:
-                swipe_down()
-            else:
-                logger.info(
-                    "Skipping swipe_down for %s (last telemetry %.1fs ago)",
-                    platform,
-                    time.monotonic() - last_capture_time[platform]
-                )
-        except frida.ProcessNotFoundError as e:
-            logger.info(f"[FRIDA] Process not found: {e}")
-            # Process might have disappeared; spawn if necessary.
-            running = False
-
-    if not running:
-        logger.info(f"[FRIDA] {package_name} not running. Spawning...")
-        pid = device.spawn([package_name])
-        device.resume(pid)
-
-    session = device.attach(pid)
-    with open(script_path, "r") as f:
-        script_source = f.read()
-    script = session.create_script(script_source)
-    script.on("message", on_message)
-    script.load()
-    session_store[app_alias] = session
-    # logger.info(f"[FRIDA] Script loaded for {package_name} from {script_path}.")
-
-def on_message(message, data):
-    """Handle messages sent from the Frida script."""
-    if message["type"] == "send":
-        payload = message["payload"]
-        if payload.get("type") == "csv-data":
-            # Retrieve CSV data from the payload.
-            csv_data = payload.get("csv", "")
-            platform = payload.get("platform", "")
-            if csv_data:
-                # logger.info(f"[HOST] Received CSV data from {platform}")
-                update_last_capture(platform)
-                # Process and append new rows only if there are status changes.
-                process_csv_data(csv_data, platform)
-            else:
-                logger.info("[HOST] CSV data is empty.")
-        else:
-            logger.info("[HOST] Message from script:", payload)
-    elif message["type"] == "error":
-        logger.info("[HOST] Error message from script:", message["stack"])
-    else:
-        logger.info("[HOST] Other message:", message)
-
-def cycle_apps(frequency = 300):
-    """Cycle between launching PlayStation and Xbox apps, attach Frida scripts, and collect CSV data."""
-    # Define package names and main activities.
-    ps_package = "com.scee.psxandroid"
-    ps_alias = "PS App"
-    ps_activity = "com.scee.psxandroid.activity.TopActivity"
-
-    xbox_package = "com.microsoft.xboxone.smartglass"
-    xbox_alias = "Xbox"
-    xbox_activity = "com.microsoft.xbox.MainActivity"
-    
-    # A dictionary to hold Frida sessions.
-    session_store = {}
-    
-    # ----- Process for PlayStation app -----
-    if needs_reboot["PlayStation"]:
-        reboot_device()           # does adb reboot + frida restart
-        needs_reboot["PlayStation"] = False
-    elif needs_restart["PlayStation"]:
-        close_app(ps_package)
-        launch_app(ps_package)
-        needs_restart["PlayStation"] = False
-
-    attach_frida_to_app(ps_package, ps_alias, ps_activity, "scrape_playstation.js", session_store)
-    logger.info("[HOST] Waiting for PlayStation telemetry...")
-    time.sleep(frequency * .3)
-
-    # ----- Process for Xbox app -----
-    if needs_reboot["Xbox"]:
-        reboot_device()
-        needs_reboot["Xbox"] = False
-    elif needs_restart["Xbox"]:
-        close_app(xbox_package)
-        launch_app(xbox_package)
-        needs_restart["Xbox"] = False
-    attach_frida_to_app(xbox_package, xbox_alias, xbox_activity, "scrape_xbox.js", session_store)
-    logger.info("[HOST] Waiting for Xbox telemetry...")
-    time.sleep(frequency * .3)
-
-def run_cycle():
-    try:
-        cycle_apps(frequency)
-    except Exception as e:
-        logger.info("[HOST] Error in cycle_apps:", e)
-
-if __name__ == "__main__":
-
-    # Start the recurring digest cycle
-    logger.info("Starting digest scheduler with interval %d hours", digest_interval_hours)
-    schedule_digest(first_digest_time)
-
-    reboot_device(force = False)
-    reboot_frida()
-    # Check if adb is already in root mode
-
-    logger.info("[HOST] Starting telemetry collection workflow...")
+# ── Alert monitor ─────────────────────────────────────────────────────────────
+def _alert_monitor():
+    """Background thread: escalating email alerts when a platform goes silent."""
     while True:
-
-        # If a reboot is in progress, wait until it's done.
-        if reboot_event.is_set():
-            logger.info("Device is rebooting. Pausing cycle_apps until reboot is complete...")
-            time.sleep(30)  # adjust the sleep duration as appropriate
-            continue  # Skip this iteration of the loop until reboot_event is cleared.
-
-        start_time = time.monotonic()
-        run_cycle()
+        time.sleep(60)
         now = time.monotonic()
-        remainder = now % frequency  # Calculate time passed since the epoch remainder with respect to frequency
-        sleep_time = frequency - remainder
-        logger.info(f"[HOST] Cycle complete. Waiting {sleep_time:.0f} seconds until next cycle...")
+        for platform in last_capture_time:
+            elapsed = now - last_capture_time[platform]
+            state   = escalation_state[platform]
+            if state == 0 and elapsed > 2 * POLL_INTERVAL + 60:
+                digest.send_email(f"No telemetry from {platform}",
+                                  f"{platform} silent for {elapsed:.0f}s")
+                escalation_state[platform] = 1
+            elif state == 1 and elapsed > 3 * POLL_INTERVAL + 60:
+                digest.send_email(f"Continued outage: {platform}",
+                                  f"{platform} silent for {elapsed:.0f}s")
+                escalation_state[platform] = 2
+
+
+def _api_key_warning_runner():
+    digest.send_email("Rotate PSN_API_KEY",
+                      "3 weeks since startup — update PSN_API_KEY in .env.")
+    threading.Timer(API_KEY_WARN_DELAY, _api_key_warning_runner).start()
+
+# ── Main polling loop ─────────────────────────────────────────────────────────
+if __name__ == "__main__":
+    required = ["EMAIL_USER", "EMAIL_PASSWORD"]
+    if ENABLE_PLAYSTATION:
+        required.append("PSN_API_KEY")
+    if ENABLE_XBOX:
+        required += ["XBOX_CLIENT_ID", "XBOX_SECRET_VALUE"]
+    missing = [k for k in required if not os.getenv(k)]
+    if missing:
+        raise RuntimeError(f"Missing environment variables: {', '.join(missing)}")
+
+    enabled_platforms = [p for p, en in [("PlayStation", ENABLE_PLAYSTATION),
+                                          ("Xbox",        ENABLE_XBOX),
+                                          ("Nintendo",    ENABLE_NINTENDO)] if en]
+
+    # Initialise digest module and platform clients
+    digest.init(
+        data_dir=DATA_DIR,
+        email_user=os.getenv("EMAIL_USER"),
+        email_password=os.getenv("EMAIL_PASSWORD"),
+    )
+    digest.daily_errors.update({p: [] for p in enabled_platforms})
+
+    if ENABLE_PLAYSTATION:
+        playstation.init(os.getenv("PSN_API_KEY"))
+    if ENABLE_XBOX:
+        xbox.init()
+    if ENABLE_NINTENDO:
+        nintendo.init()
+
+    threading.Thread(target=_alert_monitor, daemon=True).start()
+    threading.Timer(API_KEY_WARN_DELAY, _api_key_warning_runner).start()
+    digest.schedule_digest("09:00", enabled_platforms=enabled_platforms)
+
+    logger.info(
+        "Starting polling — PlayStation=%s, Xbox=%s, Nintendo=%s",
+        ENABLE_PLAYSTATION, ENABLE_XBOX, ENABLE_NINTENDO,
+    )
+
+    platforms = [
+        ("PlayStation", ENABLE_PLAYSTATION, playstation),
+        ("Xbox",        ENABLE_XBOX,        xbox),
+        ("Nintendo",    ENABLE_NINTENDO,    nintendo),
+    ]
+
+    while True:
+        for platform, enabled, module in platforms:
+            if not enabled:
+                continue
+            try:
+                rows = module.fetch()
+                if rows:
+                    update_person_csv(rows, platform)
+                last_capture_time[platform] = time.monotonic()
+                escalation_state[platform]  = 0   # reset on successful fetch
+            except Exception as e:
+                logger.error("[%s] fetch failed: %s", platform, e)
+                digest.daily_errors.setdefault(platform, []).append(str(e))
+
+        now        = time.monotonic()
+        sleep_time = POLL_INTERVAL - (now % POLL_INTERVAL)
+        if sleep_time < 120:
+            sleep_time += POLL_INTERVAL
+        logger.info("[HOST] Cycle complete. Sleeping %.0fs.", sleep_time)
         time.sleep(sleep_time)
